@@ -25,6 +25,6 @@ If any <b>question</b>, please send an <b>email</b> to me or just open an <b>iss
 
 #### Personal information
 
-Email: {{ site.email }}
-Facebook: [hc9303](https://facebook.com/hc9303)
+Email: {{ site.email }}<br>
+Facebook: [hc9303](https://facebook.com/hc9303)<br>
 Instagram: [beaubrummell](https://instagram.com/beaubrummell)

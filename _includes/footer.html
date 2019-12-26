@@ -1,4 +1,4 @@
-<footer class="page-footer {{ site.footer-color }}">
+﻿<footer class="page-footer {{ site.footer-color }}">
     <div class="container">
       <div class="row">
         <div class="col l4 s12">
@@ -14,11 +14,11 @@
             {% if site.github_username %}
             <li><a href="https://github.com/{{ site.github_username }}" class="white-text text-lighten-3 btn waves-effect waves-light {{ site.footer-button-color }} lighten-3"><i class="mdi mdi-github-circle"></i></a></li>
             {% endif %}
-            {% if site.googleplus_username %}
-            <li><a href="https://plus.google.com/+{{ site.googleplus_username }}" class="white-text text-lighten-3 btn waves-effect waves-light {{ site.footer-button-color }} lighten-3"><i class="mdi mdi-google-plus"></i></a></li>
+            {% if site.facebook_username %}
+            <li><a href="https://facebook.com/+{{ site.facebook_username }}" class="white-text text-lighten-3 btn waves-effect waves-light {{ site.footer-button-color }} lighten-3"><i class="mdi mdi-facebook"></i></a></li>
             {% endif %}
-            {% if site.twitter_username %}
-            <li><a href="https://twitter.com/{{ site.twitter_username }}" class="white-text text-lighten-3 btn waves-effect waves-light {{ site.footer-button-color }} lighten-3"><i class="mdi mdi-twitter"></i></a></li>
+            {% if site.instagram_username %}
+            <li><a href="https://instagram.com/{{ site.instagram_username }}" class="white-text text-lighten-3 btn waves-effect waves-light {{ site.footer-button-color }} lighten-3"><i class="mdi mdi-instagram"></i></a></li>
             {% endif %}
           </ul>
         </div>
@@ -27,7 +27,7 @@
     </div>
     <div class="footer-copyright">
       <div class="container">
-        Copyright © {{ site.author }}, under<a class="{{ site.footer-link-color }}" href="https://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA 4.0</a> Powered by <a class="{{ site.footer-link-color }}" href="http://jekyllrb.com/">Jekyll</a>.
+        Copyright © {{ site.author }}
         <a class="btn waves-effect waves-light {{ site.footer-button-color }} lighten-1 right white-text" href="{{ '/about' | prepend: site.baseurl }}" >Contact me</a>
       </div>
     </div>
