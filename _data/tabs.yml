@@ -1,12 +1,12 @@
 # **NOTE**
 # 1. Empty strings are truthy.
 
-- id: tab-test
-  name: test
-  fp: tab/test.html
+- id: write-up
+  name: write-up
+  fp: tab/writeup.html
   disabled: false
 
-- id: tab-test1
-  name: diasble-test
-  fp: tab/test1.html
-  disabled: true
+- id: etc
+  name: etc
+  fp: tab/etc.html
+  disabled: false
