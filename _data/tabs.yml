@@ -6,7 +6,7 @@
   fp: tab/writeup.html
   disabled: false
 
-- id: etc
-  name: etc
-  fp: tab/etc.html
-  disabled: false
+#- id: etc
+#  name: etc
+#  fp: tab/etc.html
+#  disabled: false
