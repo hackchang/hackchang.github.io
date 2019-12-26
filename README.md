@@ -1,1 +1,2 @@
-# hackchang.github.io
+HackChang's Blog
+https://hackchang.github.io/
