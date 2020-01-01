@@ -1,7 +1,8 @@
-﻿---
+---
 layout: post
 title:  "[CodeEngn] Basic RCE L04 문제 풀이 Write Up"
 date:   2019-11-19
+tags: [reversing, writeup]
 sitemap :
 changfreq : daily
 priority : 1.0
@@ -11,17 +12,21 @@ categories: [reversing,writeup]
 ![L04 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Frg3vp%2FbtqzS0dYUan%2FPPlw3n3CzVEmw1F4SrQCik%2Fimg.png)
 
 Basic RCE L04
+
 이 프로그램은 디버거 프로그램을 탐지하는 기능을 갖고 있다. 디버거를 탐지하는 함수의 이름은 무엇인가
+
 압축파일을 다운로드 받는다.
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FyoF8D%2FbtqzR2QSkci%2FDTBJaukzEyX63p8XrVwuh1%2Fimg.png)
 
-암호는 항상 <b><u>codeengn</b></u>이다.
+암호는 항상 <b><u>codeengn </u></b>이다.
+
 5번 문제부터는 암호가 바뀌지 않는 이상 적지 않겠다.
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcGpi9z%2FbtqzQtPsm6h%2Furf7qKUYMJz3axEFz83SA1%2Fimg.png)
 
 실행을 해보면 정상으로 나오는데 문제가 디버그 프로그램 탐지인 것으로 보아 디버그 툴을 키면
+
 비정상으로 나올 것이라고 예상해볼 수 있다.
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FzIxI2%2FbtqzT5MB2qS%2FhVXUJZvkwxLcwdsAu99l6K%2Fimg.png)
@@ -34,7 +39,7 @@ Basic RCE L04
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FkGqRa%2FbtqzT6LwnZC%2FX9CVEtJZhdb4sMeF2a8rM0%2Fimg.png)
 
-<b><u>IsDebuggerPresent</b></u>라는 함수가 디버그를 탐지하는 것으로 예상해볼 수 있었고, 구글을 통해 검색을 해보았다.
+<b><u>IsDebuggerPresent </u></b>라는 함수가 디버그를 탐지하는 것으로 예상해볼 수 있었고, 구글을 통해 검색을 해보았다.
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbRkNWq%2FbtqzTD3SNZT%2FBJSYwFqcTpHShJ9pj8MGNk%2Fimg.png)
 
