@@ -2,6 +2,9 @@
 layout: post
 title:  "[CodeEngn] Basic RCE L01 문제 풀이 Write Up"
 date:   2016-12-30
+sitemap :
+changfreq : daily
+priority : 1.0
 categories: [reversing,writeup]
 ---
 
