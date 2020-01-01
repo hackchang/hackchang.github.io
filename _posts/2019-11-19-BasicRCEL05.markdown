@@ -1,0 +1,56 @@
+﻿---
+layout: post
+title:  "[CodeEngn] Basic RCE L05 문제 풀이 Write Up"
+date:   2019-11-19
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L05 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Frg3vp%2FbtqzS0dYUan%2FPPlw3n3CzVEmw1F4SrQCik%2Fimg.png)
+
+Basic RCE L05
+이 프로그램의 등록키는 무엇인가
+프로그램안의 등록키를 알아내는 문제이다.
+압축을 풀고 실행파일을 실행시켜본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Flsalc%2FbtqzQsv8a48%2FvGdYhF3hcHB7YQBGz9mm0k%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FxSJPT%2FbtqzRN7rhb0%2FKyCk4opAR6cHyMMjy2SHb1%2Fimg.png)
+
+Register now !를 누르면 잘못된 시리얼이라고 나온다.
+이제 올리디버거로 열어본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcxQbeY%2FbtqzSO5TBAS%2FU0I1yExUpN1SyoyjkrkxVK%2Fimg.png)
+
+대책없이 올리디버거로 열어봤지만 검색을 통해 얻고자하는 결과가 나오지않았다.
+패킹이 된 파일인 것 같아 PEID로 열어보았다.
+
+<b><u>[PEID 다운로드](https://k.kakaocdn.net/dn/dl95Ap/btqzRNGmmkp/d7RxbjkDTD2Ovnijv50khk/PEiD.exe?attach=1&knm=tfile.exe)</b></u>
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FGlvaR%2FbtqzQ7kNe3z%2FTmjbsdfk4MZdgurMJWMbxK%2Fimg.png)
+
+역시나 UPX로 패킹이 된 파일이었고, 언패킹툴을 통해 언패킹을 진행하였다.
+
+<b><u>[UPX 언패커 다운로드](https://k.kakaocdn.net/dn/bHPGQZ/btqzSZF8lRX/omp3ic0jKjXUVRQFkgjIz1/upx.exe?attach=1&knm=tfile.exe)</b></u>
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FXPM5q%2FbtqzP4hZM0o%2FMTkmTvV5k7ywwbRbGkd06K%2Fimg.png)
+
+위와같은 옵션을 이용하여 언패킹을 진행한다.
+upx.exe를 cmd를 통해 실행해야만 한다.
+ex ) upx 파일명.exe -d
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbJ0EhP%2FbtqzQUMMnlT%2Fj20YbKDSVONWbSMr3CBYfk%2Fimg.png)
+
+언패킹을 하고, PEID로 다시 열어보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F3gGkC%2FbtqzR2QTgIa%2Fk42DTtWj4GQrLk83xhQGrk%2Fimg.png)
+
+언패킹이 된 것을 볼 수 있었고, 다시 올리디버거로 열어보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fb5Cubg%2FbtqzR395CKr%2FM1RtHHxDFaGTPLchTaf2w0%2Fimg.png)
+
+스트링 검색을 통해 시리얼 값을 확인할 수 있었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FkUX71%2FbtqzTC415ae%2FgD2oMkBkpasrFqXofDXBSk%2Fimg.png)

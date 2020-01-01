@@ -1,0 +1,20 @@
+﻿---
+layout: post
+title:  "[CodeEngn] Basic RCE L01 문제 풀이 Write Up"
+date:   2019-11-19
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FUBBNt%2FbtqzPu8QDmD%2FU6JPx9Y3AaS8WjnPtV3Rl0%2Fimg.png)
+
+Basic RCE L01
+HDD를 CD-Rom으로 인식시키기 위해서는 GetDriveTypeA의 리턴값이 무엇이 되어야 하는가
+파일을 다운로드 받을 필요없이 GetDriveTypeA에 대해 구글에 검색해보면
+CD-ROM에 해당하는 리턴값을 발견할 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FomPI8%2FbtqzRMN1jDI%2FUYE0mWuShWHHIKQksnjG01%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fb28PHE%2FbtqzTDo2ve0%2FZw8PtS9uWeSP00kYh1jdW0%2Fimg.png)

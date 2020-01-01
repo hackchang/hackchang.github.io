@@ -1,10 +1,10 @@
 # **NOTE**
 # 1. Empty strings are truthy.
 
-- id: write-up
-  name: write-up
-  fp: tab/writeup.html
-  disabled: false
+# id: write-up
+# name: write-up
+#  fp: tab/writeup.html
+#  disabled: false
 
 #- id: etc
 #  name: etc

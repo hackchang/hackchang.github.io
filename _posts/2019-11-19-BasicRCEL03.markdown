@@ -1,0 +1,28 @@
+﻿---
+layout: post
+title:  "[CodeEngn] Basic RCE L03 문제 풀이 Write Up"
+date:   2019-11-19
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L03 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FsmVrX%2FbtqzQ75UNb7%2FeFhkYpH5hSiXEuJyzEAXLK%2Fimg.png)
+
+Basic RCE L03
+비주얼베이직에서 스트링 비교함수 이름은?
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcH4prn%2FbtqzSPDwtDv%2F2NCxHSnfsKJvKAqKfs9ZSk%2Fimg.png)
+
+압축파일의 비밀번호는 <b>codeengn</b>이다.
+
+프로그램을 IDA로 열어서 import하는 함수를 보게되면
+
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FepIiQF%2FbtqzR2wz4jp%2Fxj08zKRDz9fF5SmO36GpL0%2Fimg.png)
+
+<b><u>__vbaStrCmp</b></u>라는 비주얼베이직 문자열 비교함수를 찾을 수 있다.
+______를 제외한 나머지를 넣고 인증하면된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fby1pZV%2FbtqzPwMroR5%2F8efIZ0OZbKD7KtKUPtGYR1%2Fimg.png)
