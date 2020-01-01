@@ -63,6 +63,12 @@ footer-link-color: "red-text text-accent-1"
 share-button-color: "pink"
 share-button-small-color: ""
 
+# Analytics
+analytics:
+    provider               : "google-gtag" # 구글 어날리틱스 등록 false (default), "google", "google-universal", "custom"
+    google:
+    tracking_id          : "UA-153211609-1"
+    anonymize_ip         : # true, false (default)
 
 ##
 #excerpt_separator: <!-- excerpt_end -->       # for post.excerpt
