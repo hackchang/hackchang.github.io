@@ -12,6 +12,8 @@ title: HackChang's Blog
 baseurl: ""    # the subpath of your site, "/blog"
 url: "https://hackchang.github.io/"
 
+disqus-shortname: hackchang
+
 # footer 
 description: "HackChang's Blog."
 
@@ -64,8 +66,5 @@ share-button-small-color: ""
 
 ##
 #excerpt_separator: <!-- excerpt_end -->       # for post.excerpt
-
-#Disqus
-disqus_shortname: "hackchang"
 
 
