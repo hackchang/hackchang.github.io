@@ -19,7 +19,6 @@ layout: default
         {% else %}unknown
         {% endif %}
       </span>
-      &emsp;<i class="mdi mdi-refresh"></i>&nbsp;UPDATE: {% if page.update %}{{ page.update | date: "%b %-d, %Y" }}{% else %}{{ page.last_modified_at | date: "%b %-d, %Y" }}{% endif %}
     </p>
 
     <div class="post-header">
@@ -38,7 +37,7 @@ layout: default
     </article>
 
     {% include share.html %}
-
+    {% if site.disqus-shortname %}{% include comment.html %}{% endif %}
   </div>
   </div>
 
@@ -47,5 +46,3 @@ layout: default
   {% endif %}
 
 </div>
-
-{% if site.disqus-shortname %}{% include comment.html %}{% endif %}
