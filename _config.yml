@@ -66,6 +66,6 @@ share-button-small-color: ""
 #excerpt_separator: <!-- excerpt_end -->       # for post.excerpt
 
 #Disqus
-disqus_url: "hackchang"
-disqus_id: "hackchang"
+disqus_shortname: "hackchang"
+
 
