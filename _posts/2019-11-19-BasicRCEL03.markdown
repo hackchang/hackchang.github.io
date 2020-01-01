@@ -26,6 +26,6 @@ Basic RCE L03
 
 <b><u>__vbaStrCmp </u></b>라는 비주얼베이직 문자열 비교함수를 찾을 수 있다.
 
-____를 제외한 나머지를 넣고 인증하면된다. 
+__를 제외한 나머지를 넣고 인증하면된다. 
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fby1pZV%2FbtqzPwMroR5%2F8efIZ0OZbKD7KtKUPtGYR1%2Fimg.png)
