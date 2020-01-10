@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L11 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FERd4Q%2FbtqzSOTaLr3%2Fembl7i7IgXiZVHDLstKmYk%2Fimg.png)
 
-Basic RCE L11
-
+#Basic RCE L11
+---
 OEP를 찾으시오. Ex) 00401000 / Stolenbyte 를 찾으시오.
 
 Ex) FF35CA204000E84D000000 정답인증은 OEP+ Stolenbyte

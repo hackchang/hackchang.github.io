@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L14 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fvd1nU%2FbtqzSZtIDDq%2FVBxSkYIHPjGawtuXICOqz1%2Fimg.png)
 
-Basic RCE L14
-
+#Basic RCE L14
+---
 Name이 CodeEngn 일때 Serial을 구하시오
 
 (이 문제는 정답이 여러개 나올 수 있는 문제이며 5개의 숫자로 되어있는 정답을 찾아야함, bruteforce 필요)

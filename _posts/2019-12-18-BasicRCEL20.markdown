@@ -11,7 +11,7 @@ categories: [reversing,writeup]
 
 ![L20 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FouMrt%2FbtqAyxpaRRT%2Fp0MyC9KcP3pncBSODWQkKk%2Fimg.png)
 
-Basic RCE L20
+#Basic RCE L20
 
 이 프로그램은 Key파일을 필요로 하는 프로그램이다.
 

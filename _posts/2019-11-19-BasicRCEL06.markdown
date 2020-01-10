@@ -11,7 +11,7 @@ categories: [reversing,writeup]
 
 ![L06 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcA04IL%2FbtqzT5TovaV%2FWclQAwDGhLwq9aAasZy9y1%2Fimg.png)
 
-Basic RCE L06
+#Basic RCE L06
 
 Unpack을 한 후 Serial을 찾으시오.
 

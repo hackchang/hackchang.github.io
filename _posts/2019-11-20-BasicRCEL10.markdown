@@ -11,6 +11,8 @@ categories: [reversing,writeup]
 
 ![L10 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F15dbg%2FbtqzT4UwPHs%2FVcpfXiRliEb8RPWGZ1mVb1%2Fimg.png)
 
+#Basic RCE 10
+---
 OEP를 구한 후 '등록성공' 으로 가는 분기점의 OPCODE를 구하시오.
 
 정답인증은 OEP + OPCODE

@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L08 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FqSN8Z%2FbtqzSZGazCd%2FkFF9biY0jYXA3QxE66Yznk%2Fimg.png)
 
-Basic RCE L08
-
+#Basic RCE L08
+---
 OEP를 구하시오 Ex) 00400000
 
 파일을 실행시켜보면 계산기가 나오는 것을 볼 수 있다.

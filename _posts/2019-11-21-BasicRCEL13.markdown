@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L13 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcq0wDd%2FbtqzU8C7R2R%2FjPYaTdLNqq9fyXbwETBxWk%2Fimg.png)
 
-Basic RCE L13
-
+#Basic RCE L13
+---
 정답은 무엇인가
 
 파일을 압축풀고, 실행시켜봤다.

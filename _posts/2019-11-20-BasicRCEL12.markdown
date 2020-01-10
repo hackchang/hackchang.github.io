@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L12 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F8JO1z%2FbtqzVoS7hEN%2F82Xl813iEfiLnLrHhTEeb0%2Fimg.png)
 
-Basic RCE L12
-
+#Basic RCE L12
+---
 Key를 구한 후 입력하게 되면 성공메시지를 볼 수 있다.
 
 이때 성공메시지 대신 Key 값이 MessageBox에 출력 되도록 하려면 파일을 HexEdit로 오픈 한 다음 0x???? ~ 0x???? 영역에 Key 값을 overwrite 하면 된다.

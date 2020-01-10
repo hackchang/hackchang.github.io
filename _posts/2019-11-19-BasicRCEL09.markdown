@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L09 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fc2ePcG%2FbtqzT4NMhg9%2FlsioKFKFgMcSBaRZLRPDMK%2Fimg.png)
 
-Basic RCE L09
-
+#Basic RCE L09
+---
 StolenByte를 구하시오 Ex) 75156A0068352040
 
 문제를 풀기 전에 StolenByte가 뭔지 우선 구글에 검색을 해보았다.

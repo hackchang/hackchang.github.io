@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L17 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbCmM0d%2Fbtqz3n17zXH%2FYpXs3V7VetFzZ6eVIE4jPk%2Fimg.png)
 
-Basic RCE L17
-
+#Basic RCE L17
+---
 Key 값이 BEDA-2F56-BC4F4368-8A71-870B 일때 Name은 무엇인가
 
 힌트 : Name은 한자리인데.. 알파벳일수도 있고 숫자일수도 있고..

@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L07 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbjBL2O%2FbtqzTCDVhZ8%2FVdKUvBkoS7yqgMyofKGFG1%2Fimg.png)
 
-Basic RCE L07
-
+#Basic RCE L07
+---
 컴퓨터 C 드라이브의 이름이 CodeEngn 일경우 시리얼이 생성될때 CodeEngn은 'ß어떤것'으로 변경되는가
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fo4G7O%2FbtqzSZlQjUs%2Fk2NNAceBE1CVKgFjkdvxcK%2Fimg.png)
