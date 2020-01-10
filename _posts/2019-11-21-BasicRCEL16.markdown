@@ -12,7 +12,7 @@ categories: [reversing,writeup]
 ![L16 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcg636L%2FbtqzU9hQIZH%2F0ENJpNaJdHPhBDi9I6tSIk%2Fimg.png)
 
 #Basic RCE L16
-
+---
 Name이 CodeEngn일때 Serial을 구하시오
 
 압축을 풀고, PEID로 열어봤다.

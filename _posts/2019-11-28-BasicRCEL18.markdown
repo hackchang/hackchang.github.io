@@ -12,7 +12,7 @@ categories: [reversing,writeup]
 ![L18 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbDHFCJ%2Fbtqz3nVo3Bc%2FudeSJWieXIQj9ydfIcdK10%2Fimg.png)
 
 #Basic RCE L18
-
+---
 Name이 CodeEngn일때 Serial은 무엇인가
 
 압축을 풀고 실행시키기 전에 PEID로 열어보았다.
