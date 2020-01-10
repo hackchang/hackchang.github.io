@@ -1,11 +1,11 @@
 ﻿---
 layout: post
-title:  "[CodeEngn] Basic RCE L01 문제 풀이 Write Up"
+title:  "notice"
 date:   2016-12-30
 sitemap :
 changfreq : daily
 priority : 1.0
-categories: [reversing,writeup]
+categories: [notice]
 ---
 
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.

@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L04 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Frg3vp%2FbtqzS0dYUan%2FPPlw3n3CzVEmw1F4SrQCik%2Fimg.png)
 
-Basic RCE L04
-
+#Basic RCE L04
+---
 이 프로그램은 디버거 프로그램을 탐지하는 기능을 갖고 있다. 디버거를 탐지하는 함수의 이름은 무엇인가
 
 압축파일을 다운로드 받는다.

@@ -11,7 +11,8 @@ categories: [reversing,writeup]
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FUBBNt%2FbtqzPu8QDmD%2FU6JPx9Y3AaS8WjnPtV3Rl0%2Fimg.png)
 
-Basic RCE L01
+#Basic RCE L01
+---
 
 HDD를 CD-Rom으로 인식시키기 위해서는 GetDriveTypeA의 리턴값이 무엇이 되어야 하는가
 

@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L05 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Frg3vp%2FbtqzS0dYUan%2FPPlw3n3CzVEmw1F4SrQCik%2Fimg.png)
 
-Basic RCE L05
-
+#Basic RCE L05
+---
 이 프로그램의 등록키는 무엇인가
 
 프로그램안의 등록키를 알아내는 문제이다.

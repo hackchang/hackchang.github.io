@@ -11,8 +11,8 @@ categories: [reversing,writeup]
 
 ![L03 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FsmVrX%2FbtqzQ75UNb7%2FeFhkYpH5hSiXEuJyzEAXLK%2Fimg.png)
 
-Basic RCE L03
-
+#Basic RCE L03
+---
 비주얼베이직에서 스트링 비교함수 이름은?
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcH4prn%2FbtqzSPDwtDv%2F2NCxHSnfsKJvKAqKfs9ZSk%2Fimg.png)
