@@ -1,0 +1,74 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L17 문제 풀이 Write Up"
+date:   2019-11-28
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L17 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbCmM0d%2Fbtqz3n17zXH%2FYpXs3V7VetFzZ6eVIE4jPk%2Fimg.png)
+
+Basic RCE L17
+
+Key 값이 BEDA-2F56-BC4F4368-8A71-870B 일때 Name은 무엇인가
+
+힌트 : Name은 한자리인데.. 알파벳일수도 있고 숫자일수도 있고..
+
+정답인증은 Name의 MD5 해쉬값(대문자)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbhD9qz%2Fbtqz14bcsLx%2FbvjAdz1U08BQBgVeYwdWzk%2Fimg.png)
+
+실행을 하면 키젠프로그램이 나온다.
+
+1을 입력하고 check it!을 누르면 위와같은 메세지가 키에 들어간다.
+
+올리디버거를 통해 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FZ7QXj%2Fbtqz4VwP3cN%2FgI5O3geJ7VwfKf8JmhEmSK%2Fimg.png)
+
+스트링 검색을 통해 에러메세지와 성공메세지를 찾을 수 있었다.
+
+위의 에러메세지로 들어가봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOL9E9%2Fbtqz4WJikJH%2Fc4GkPYPoUY99JDN3tIKJY0%2Fimg.png)
+
+글자수가 3글자미만일때 에러메세지가 출력되는 것을 볼 수 있다.
+
+문제는 Name이 한글자라고 했으니 비교하는 부분을 한 글자로 바꿔준다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FusJQr%2Fbtqz2DxDgyK%2FWf5RIH85zSGTEHT0rqvnR0%2Fimg.png)
+
+1로 바꿔주고, 실패 문자열 아래에 BP를 걸고 실행시킨다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FoELWR%2Fbtqz4jyjsQR%2FVlQcqaUGiWdm7ezPpIYOr0%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbMiWvB%2Fbtqz5aURjSZ%2FzA4Hq3MeqB7G9RDWVpmBa1%2Fimg.png)
+
+1을 입력하고 Checkit!을 했을 때의 시리얼을 만들어 내는 것을 알 수 있었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbpXrHJ%2Fbtqz5aN6L9S%2FfskkrOJwTbFKeevJ8kYRU0%2Fimg.png)
+
+CALL 0045b850이 시리얼을 만들어 내는 것을 알 수 있었고, f7을 눌러 들어가보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbIqvcv%2Fbtqz5yVvZ3x%2FH1vlllqESIPCsBtV32cle0%2Fimg.png)
+
+이 부분을 통해 시리얼을 만들어 내는 것을 알 수 있었고, 간단하게 파이썬으로 짜서 코드를 돌려봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbaZFAF%2Fbtqz3ANKFOe%2FM5InpgTYHz3HQiRQae3Na0%2Fimg.png)
+
+돌려보면 아래와 같은 결과를 볼 수 있고,
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbeVXYZ%2Fbtqz3ozZK8Z%2FfY1Z8nhFIudqEDVnT9LGY0%2Fimg.png)
+
+70이 name인 것을 알았고, 이를 아스키코드로 바꾸면 F가 나온다.
+
+F를 MD5해시로 바꾸면
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FvgbUn%2Fbtqz4hUIBwo%2FkgKOKFaD1Sv8ZFlosKFMyk%2Fimg.png)
+
+인증하면 클리어가 된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbpQUaJ%2Fbtqz3BlAyuV%2FgKTvjH2pJhtDjyKfjV0SOK%2Fimg.png)

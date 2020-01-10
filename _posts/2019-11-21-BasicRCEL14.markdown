@@ -1,0 +1,51 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L14 문제 풀이 Write Up"
+date:   2019-11-21
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L14 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fvd1nU%2FbtqzSZtIDDq%2FVBxSkYIHPjGawtuXICOqz1%2Fimg.png)
+
+Basic RCE L14
+
+Name이 CodeEngn 일때 Serial을 구하시오
+
+(이 문제는 정답이 여러개 나올 수 있는 문제이며 5개의 숫자로 되어있는 정답을 찾아야함, bruteforce 필요)
+
+Ex) 11111
+
+
+습관처럼 압축을 풀고, PEID에 올려봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FnrAMo%2FbtqzR25tX1C%2FTHqtg7eRHk6m3nCgzRuM71%2Fimg.png)
+
+UPX로 패킹이 된 것을 확인할 수 있었고, 툴을 통해 언패킹을 진행했다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FqdnEu%2FbtqzTCLODLs%2FfPlCunH1SkFgRTwYqcks11%2Fimg.png)
+
+언패킹을 하고, 올리디버거로 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F9ySgO%2FbtqzT42oojU%2FnxSQzcKQd88I2a4zOxDCe1%2Fimg.png)
+
+스트링을 검색하고, 성공메세지가 뜨는 주소로 이동한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FmAZ04%2FbtqzU8JYyoW%2FuleS6FCQeYry6og04PnCQK%2Fimg.png)
+
+성공메세지를 확인하기위해 문자를 비교하는 부분에 BP를 걸고 실행시켜본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FDoccM%2FbtqzU9B98YU%2Fo1LotgsYSi7m5ScQCdFKJK%2Fimg.png)
+
+Name에 CodeEngn을 적고 Serial에 1을 적고 체크를 한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcscTRJ%2FbtqzU8wtwX5%2FZILBKnpxt8283y7p7I6akk%2Fimg.png)
+
+EAX는 내가 입력한 값이고, ESI가 시리얼인 것을 알 수 있다.
+
+ESI를 10진수로 바꿔서 인증하면 된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcsutcZ%2FbtqzVoFPTl8%2Fd1nlH7F4x63PWxVga2Qui1%2Fimg.png)

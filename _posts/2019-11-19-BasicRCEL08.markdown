@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L08 문제 풀이 Write Up"
+date:   2019-11-19
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L08 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FqSN8Z%2FbtqzSZGazCd%2FkFF9biY0jYXA3QxE66Yznk%2Fimg.png)
+
+Basic RCE L08
+
+OEP를 구하시오 Ex) 00400000
+
+파일을 실행시켜보면 계산기가 나오는 것을 볼 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F18UC9%2FbtqzR3PPn45%2FoPcx0DkyoVKGKBmLzTv1G0%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F759GB%2FbtqzR3Wx0N3%2F1tr1hRfJqhWKV40bCaLUU0%2Fimg.png)
+
+혹시 OEP를 찾는 문제라면 패킹이 되어있을까 하는 마음에 PEID로 열어봤는데 역시나 UPX패킹이 되어있었다.
+
+이번에는 다른 방법으로 OEP를 찾아보도록 하겠다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbgyNE5%2FbtqzSOZai80%2FcmEFl8NPWVB6hJ1eOtpvt0%2Fimg.png)
+
+UPX패킹은 POPAD아래의 점프문부분이 OEP를 가르키고 있으므로, 01012475가 OEP인 것을 알 수 있었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcU1WKK%2FbtqzTEhsP0O%2FKcuH7HCKGx4Wkn3FKWWD7k%2Fimg.png)

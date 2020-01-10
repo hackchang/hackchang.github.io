@@ -1,0 +1,138 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L20 문제 풀이 Write Up"
+date:   2019-12-18
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L20 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FouMrt%2FbtqAyxpaRRT%2Fp0MyC9KcP3pncBSODWQkKk%2Fimg.png)
+
+Basic RCE L20
+
+이 프로그램은 Key파일을 필요로 하는 프로그램이다.
+
+'Cracked by: CodeEngn!' 문구가 출력 되도록 하려면 crackme3.key 파일안의 데이터는 무엇이 되어야 하는가
+
+Ex) 41424344454647
+
+(정답이 여러개 있는 문제로 인증시 맞지 않다고 나올 경우 Contact로 연락주시면 확인 해드리겠습니다)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FdRzR8B%2FbtqAv0MQIMx%2FP3twaOoo6lZ04eRjmGXKM0%2Fimg.png)
+
+드디어 Basic의 마지막 문제입니다.
+
+프로그램을 실행하면 위와같은 화면이 나옵니다.
+
+따로 기능은 없는 것으로 보입니다.
+
+PEID에 파일을 올려봤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FFBxc3%2FbtqAwIkGUQl%2FMzaYr7BkNfiloHa2UMfYQK%2Fimg.png)
+
+PEID를 통해 어셈으로 제작된 프로그램인 것을 알 수 있었습니다.
+
+올리디버거를 통해 프로그램을 열어봤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FddabTP%2FbtqAxhAlkKH%2FGjkfAvnfdx606vYp5V7eAk%2Fimg.png)
+
+보게되면, CreateFile을 통해 CRACKME3.KEY이 있는 경우에 18바이트만큼 문자를 읽는 것을 볼 수 있었습니다.
+
+18바이트 크기의 CRACKME3.KEY파일(123456789012345678)을 같은 폴더에 만들고 다시 올리디버거에 올려봤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Frz7Wi%2FbtqAwISBGey%2FX5n9TkXaNOBbL08Ooeql31%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbzAcxh%2FbtqAwHTCjwn%2FCbkDRIi83LD4BijJy0Zs2k%2Fimg.png)
+
+ReadFile을 통해 키파일을 불러온 것을 볼 수 있었습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fc6n6Mg%2FbtqAz3m8yCz%2FHu1IQHoxF0Wya7MlfToJmK%2Fimg.png)
+
+F8로 진행하다 키값이 바뀌는 것을 볼 수 있었습니다.
+
+또한, CRACKKEY3.KEY파일은 돌아와서 4020F9의 값 4바이트와 0x12345678을 XOR연산하는 것을 볼 수 있습니다.
+
+마지막 4바이트는 바뀌지 않은 것을 확인할 수 있었고, 401311에 들어가봤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FJj4UH%2FbtqAxNZ6MBJ%2FDHmVZjvkHfIbHA5zGzCKg1%2Fimg.png)
+
+XOR연산을통해 ECX와 EAX를 0으로 초기화 시키는 것을 볼 수 있었습니다.
+
+ESI에 키값(123456789012345678)을 넣고, BL에 41을 넣는 것을 볼 수 있습니다.
+
+# <b>반복문 분석
+
+- ESI중 1바이트만 AL에 넣습니다.
+
+- BL과 AL을 XOR시킵니다.
+
+- XOR시킨 AL의 값을 ESI의 1바이트에 넣습니다.
+
+- ESI를 1증가 시킵니다.
+
+- BL을 1증가 시킵니다.
+
+- 4020F9의 값에 EAX값을 더합니다.
+
+- 0과 AL을 비교합니다.
+
+- 값이 같으면 00401335(반복문끝)으로 점프합니다.
+
+- CL을 1증가 시킵니다.
+
+- 4F(10진수 : 79)와 BL을 비교합니다.
+
+- 같지않으면 40131B(반복문처음)으로 이동한다.
+</b>
+반복문이 종료되면, ECX를 402149의 값에 넣고, 함수를 종료합니다.
+
+즉, BL(41)을 증가시키면서, CRACKME3.KEY의 키값 한 글자씩 읽어봐 XOR연산을 하는 것을 알 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FmbNsH%2FbtqAyxbJ2d2%2FEppxCXaTJjejkpYQuGiGpk%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fc86bSc%2FbtqAy2vxbKl%2FLLkp6cerf17o6hEO1ByInk%2Fimg.png)
+
+위의 값의 점프문을 바꾸어 성공적으로 메세지박스가 뜨도록 바꾸고, 키(123456789012345678)를 넣었을 때의
+
+메세지 박스를 확인했습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FA9g6a%2FbtqAxhHfWiA%2Fe1wamr0Q43LW299jSLn88k%2Fimg.png)
+
+위의 메세지 박스를 확인할 수 있었고, 앞의 14글자가 XOR연산을 하고 !가 붙여 나오는 것을 볼 수 있었습니다.
+
+메세지 박스에 Cracked by: CodeEngn!가 나와야 하므로, CodeEngn의 Hex코드를 찾아봤습니다. (!는 하지않아도 메세지에 출력됨.)
+
+CodeEngn의 Hex코드는 43 6F 64 65 45 6E 67 6E 이고,
+
+간단하게 C로 작성한 코드와 결과입니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbVMnU5%2FbtqAzyVn4Kb%2FTvh4XGkLkpp4dyaDw0neLK%2Fimg.png)
+
+HxD를 통해 KEY파일을 고쳤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fdiho4F%2FbtqAzx925kt%2FzT50iYL2wE46eeKjxKPHbK%2Fimg.png)
+
+다시 올리디버거로 열어봤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FnNXoI%2FbtqAz3VbSH0%2FMIOK9Lg5TnLtivdTlP8naK%2Fimg.png)
+
+XOR연산을 통해 CodeEngn이라는 우리가 원하는 문자를 만들었지만
+
+12345678과 4020F9의 XOR연산 값을 알아야해서 4020F9의 데이터값을 확인해봤습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fbqn7aT%2FbtqAz220Tfn%2F7uYqMPMIzEn8MUNTSLzwRK%2Fimg.png)
+
+마지막 4바이트는 7B 55 34 12인 것을 알 수 있었고, HxD를 통해 아래와 같이 KEY를 수정했습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FRwGLI%2FbtqAz2aSFHf%2FwPvUxkWtiGFSG1XOZIbuyK%2Fimg.png)
+
+수정 후 프로그램을 키게되면 아래와 같은 메세지박스를 볼 수 있습니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FHOwRi%2FbtqAz6D5uVu%2Fx6SQd2HZPz0py5aKBhUTz0%2Fimg.png)
+
+인증방식에 맞게 인증을 하면 인증이 됩니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FtPGOw%2FbtqAzy8Vt8q%2FQSqqbwUe06xQErCVIcqL00%2Fimg.png)

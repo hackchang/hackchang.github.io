@@ -1,0 +1,52 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L16 문제 풀이 Write Up"
+date:   2019-11-21
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L16 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcg636L%2FbtqzU9hQIZH%2F0ENJpNaJdHPhBDi9I6tSIk%2Fimg.png)
+
+Basic RCE L16
+
+Name이 CodeEngn일때 Serial을 구하시오
+
+압축을 풀고, PEID로 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FsD6Oa%2FbtqzVCRoXC8%2FGlXEjiOPaoaJpScd8hnSqK%2Fimg.png)
+
+따로 패킹이 되어있지 않은 것을 볼 수 있었고, 올리디버거를 통해 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fr6jbI%2FbtqzUQv4sMO%2FzmokaIodLhbufuZiEMwGJ1%2Fimg.png)
+
+스트링 검색을 통해 성공메세지를 출력하는 부분으로 들어가봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcffsyE%2FbtqzU8iX5iE%2FOSymsQ9xW0qgrCtkyQ59W0%2Fimg.png)
+
+위로 올리다보면 EAX와 EBP-3C를 비교하고, 성공메세지나 실패메세지부분으로 점프하는 곳을 볼 수 있다.
+
+비교하는 부분에 BP를 걸고 실행해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FkxDSq%2FbtqzR2R3qcO%2Fvg2dF9u9wgSd7BXPNLrakk%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcUAg60%2FbtqzWsOya7m%2FMnbiko4b7RdtYJvLaVlChk%2Fimg.png)
+
+레지스터를 보면 EAX는 패스워드가 들어가는 것을 볼 수 있다.
+
+메모리 덤프주소로 들어가본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FzZW7Z%2FbtqzVoeQESZ%2FTfXzAXfpKbcyXXXZ0qKZvK%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcW8dyM%2FbtqzVDQjNbz%2FSBrkMQoYltsqQ7medbYrLK%2Fimg.png)
+
+97 0D C6 E4와 비교하는 것을 알 수 있었고, 리틀엔디언으로 바꾸면 E4 C6 0D 97이므로,
+
+E4C60D97을 10진수로 바꾸고 인증을 해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcBQxKJ%2FbtqzVEhn3QF%2FYQNjbOfzFLpnCUKxrIE6mK%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fq0h72%2FbtqzVpx0iQU%2FqUSD3qk3BpnJ89KXfAYa3K%2Fimg.png)

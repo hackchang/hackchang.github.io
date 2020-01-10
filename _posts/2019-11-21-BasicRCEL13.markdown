@@ -1,0 +1,54 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L13 문제 풀이 Write Up"
+date:   2019-11-21
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L13 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcq0wDd%2FbtqzU8C7R2R%2FjPYaTdLNqq9fyXbwETBxWk%2Fimg.png)
+
+Basic RCE L13
+
+정답은 무엇인가
+
+파일을 압축풀고, 실행시켜봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FyemXJ%2FbtqzUOZduBv%2FFL4BGWVYmQsWBa3GCzChBK%2Fimg.png)
+
+위와같이 패스워드를 입력하는 구조이고, 틀리게되면 Bad Luck! Try again! 이라는 문자열을 출력하고,
+
+다시 입력할 수 있게된다. 올리디버거를 통해 한번 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbjP95n%2FbtqzTCrvaEB%2FqhOwkgYXG47T0JwYsOkH21%2Fimg.png)
+
+에러메세지와 함께 열리지 않는 것을 볼 수 있었다.
+
+PEID로 열어보고, 검색을 해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fu9W98%2FbtqzS0lNTyY%2Fd5Y0wNqhqCKSAoF9kxGHA1%2Fimg.png)
+
+C#으로 만들어진 프로그램은 올리디버거로 열리지 않는다고 한다.
+
+그래서 C#으로 만들어진 프로그램을 디컴파일할 수 있는 툴을 통해 진행해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fd9oAqK%2FbtqzVDvUynU%2FKauRKLFeF2cxZiLIFx1TIk%2Fimg.png)
+
+디컴파일을 통해 2개의 클래스가 존재하는 것을 볼 수 있었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FTXuun%2FbtqzR2j5g0R%2Frfruxk7cz2E4oPaPiqWbMK%2Fimg.png)
+
+메인함수를 찾을 수 있었고, Ctrl+s를 눌러 파일로 저장을 한다.
+
+text부분에 우리가 원하는 문자열이 들어있을 것이라고 생각되어 text를 출력해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FdQsOJ0%2FbtqzVCX5qnn%2FENeCQ7fJ2Ej6REI0aYE140%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FWZAU5%2FbtqzUOEZeUv%2FT74mOssEAjQEtoiDHXVnk0%2Fimg.png)
+
+다음 값을 넣고 인증하면 클리어가 된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FkYfe7%2FbtqzVpq8jOc%2FKPnioQ96MpWartQWcI7Fvk%2Fimg.png)

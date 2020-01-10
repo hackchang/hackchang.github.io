@@ -1,0 +1,44 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L06 문제 풀이 Write Up"
+date:   2019-11-19
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L06 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcA04IL%2FbtqzT5TovaV%2FWclQAwDGhLwq9aAasZy9y1%2Fimg.png)
+
+Basic RCE L06
+
+Unpack을 한 후 Serial을 찾으시오.
+
+정답인증은 OEP + Serial
+
+Ex) 00400000PASSWORD
+
+패킹이 된 파일이기 때문에 PEID로 바로 열어보았다.
+
+( PEID는 [CodeEngn Basic RCE L05 풀이](https://hackchang.github.io/posts/reversing/writeup/BasicRCEL05.html)에서 다운로드 가능 )
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbMIyCJ%2FbtqzR395H1t%2FoVYkzD53Wr8rIfj3iCR1rk%2Fimg.png)
+
+이 프로그램 또한 L05와 같이 UPX로 패킹된 것을 알 수 있었고, 똑같이 언패킹을 진행해준다.
+
+( UPX는  [CodeEngn Basic RCE L05 풀이](https://hackchang.github.io/posts/reversing/writeup/BasicRCEL05.html)에서 다운로드 가능 )
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcSNCVR%2FbtqzP4I5uEf%2F39uBJeQ9qxL7KonRjhKIEK%2Fimg.png)
+
+언패킹을 하고, 올리디버거로 열어본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FocVvM%2FbtqzR2wBACc%2Fi37zTEBophVAaSJqFdo7X1%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcH9n2b%2FbtqzQtBTkuz%2FGRO0JJr4ibOkgkOD9Wbkp1%2Fimg.png)
+
+OEP는 00401360인 것을 볼 수 있었고, 스트링 검색을 통해 시리얼 값을 알 수 있었다.
+
+OEP+시리얼값으로 인증을 한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcW13u4%2FbtqzSPDKQhe%2F2g5qnSyr1wEEteMONGVn6K%2Fimg.png)

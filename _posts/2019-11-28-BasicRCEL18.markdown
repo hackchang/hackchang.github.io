@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L18 문제 풀이 Write Up"
+date:   2019-11-28
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L18 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbDHFCJ%2Fbtqz3nVo3Bc%2FudeSJWieXIQj9ydfIcdK10%2Fimg.png)
+
+Basic RCE L18
+
+Name이 CodeEngn일때 Serial은 무엇인가
+
+압축을 풀고 실행시키기 전에 PEID로 열어보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fl4uoH%2Fbtqz4hNYbo6%2FPI5GuoGZBBjKFHvkIkIEk0%2Fimg.png)
+
+패킹이 되어있지 않은 것을 볼 수 있었고, 올리디버거로 켜봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fx9hgF%2Fbtqz4LOOunT%2FIxGOXu0C1Ky5ky36umWtQk%2Fimg.png)
+
+이와같은 프로그램형태인 것을 알 수 있었고, Name이 CodeEngn일 때, Serial을 구하는 것이므로, 스트링을 검색해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FlF1CP%2Fbtqz5yBdb2b%2FskYTol7PxPZUobJQud9j91%2Fimg.png)
+
+성공메세지를 볼 수 있었고, 자세히 보도록 한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcDlbjb%2Fbtqz4jykpgM%2FiiJkhfvdbxUvxpSNMvimo0%2Fimg.png)
+
+성공메세지로 가는 점프문위로 BP를 걸고, CodeEngn/1을 넣고 인증해봤다.
+
+06162370056B6AC0이 시리얼인 것을 알 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FDjvfX%2Fbtqz4L2nPEC%2FN8Cwhxbm2N2n49vEFklEVK%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FnRdWG%2Fbtqz27kYzmN%2FCm4aqT21Dq9z6TAbvnKRNk%2Fimg.png)

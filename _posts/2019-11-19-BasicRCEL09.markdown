@@ -1,0 +1,42 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L09 문제 풀이 Write Up"
+date:   2019-11-19
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L09 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fc2ePcG%2FbtqzT4NMhg9%2FlsioKFKFgMcSBaRZLRPDMK%2Fimg.png)
+
+Basic RCE L09
+
+StolenByte를 구하시오 Ex) 75156A0068352040
+
+문제를 풀기 전에 StolenByte가 뭔지 우선 구글에 검색을 해보았다.
+
+검색 결과, <b>StolenByte란 패킹 과정을 방해하기위해 프로그램의 일부 바이트를 별도의 영역에서 실행되게 하여 OEP를 다른 위치로 가장하고 덤프를 쉽게 하지 못하도록 구현한 기법입니다. StolenByte와 함께 복원해야 덤프가 성공적으로 처리된다.</b>
+
+결과적으로 EP와 관련된 것으로 보아 이 파일또한 패킹이 되어있을 것으로 생각하고 PEID를 통해 열어보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FR1eTO%2FbtqzROrN0wT%2FfyrTZvpSiKHjGBKc7uv9Dk%2Fimg.png)
+
+UPX로 패킹된 것을 확인할 수 있었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F2c7Ai%2FbtqzTC44jIe%2Fms7VfhUxNJKZ5oXRZoDun0%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FRSceO%2FbtqzSZTHjv6%2FUfREQKUQH9960uxdxgvn1k%2Fimg.png)
+
+평소와 같이 툴로 언패킹을 진행하고, 올리디버거로 열었는데 EP부분의 데이터가 깨진 것을 볼 수 있다.
+
+다시 패킹 전의 파일을 열어 패킹부분을 확인해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FSXwiu%2FbtqzT474g9e%2FkRgspgswsYXjF6dREbVKtk%2Fimg.png)
+
+패킹된 부분을 보면 PUSH 3줄이 StolenByte인 것을 알 수 있다.
+
+저 부분 OPCODE를 쭉 이어적으면 인증이 된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FDvl1d%2FbtqzQU681Eh%2FGdOyjRG2IHXHwtwzKNtma0%2Fimg.png)

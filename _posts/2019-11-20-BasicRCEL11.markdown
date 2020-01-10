@@ -1,0 +1,50 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L11 문제 풀이 Write Up"
+date:   2019-11-20
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L11 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FERd4Q%2FbtqzSOTaLr3%2Fembl7i7IgXiZVHDLstKmYk%2Fimg.png)
+
+Basic RCE L11
+
+OEP를 찾으시오. Ex) 00401000 / Stolenbyte 를 찾으시오.
+
+Ex) FF35CA204000E84D000000 정답인증은 OEP+ Stolenbyte
+
+Ex ) 00401000FF35CA204000E84D000000
+
+OEP를 찾는 문제는 패킹이 되어있을 확률이 높다. PEID로 열어본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fwyj7g%2FbtqzSO6K2T7%2F4PClSj7xxYQuU1V8pbpS6K%2Fimg.png)
+
+역시나 패킹이 되어있었고, UPX로 패킹된 파일이었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbgP02J%2FbtqzU9ICtGj%2F7JBoKxDMe4ADMx2N53Qdv1%2Fimg.png)
+
+검색을통해 POPAD를 검색해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FsyqxZ%2FbtqzT6yUsGG%2FGeWjnKeg1s5gVhXOGwolt1%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FCkGbV%2FbtqzTDjmrMf%2F00i0Nt5NVamyu8PhTkTlpk%2Fimg.png)
+
+<b>stolenbyte</b>를 찾기위해 0040736D에 BP를 걸고 실행해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FKfluL%2FbtqzVo6CuZh%2FzsqlYrIaTkNFZ3kK8wnNg1%2Fimg.png)
+
+0040736E~00407370까지 stolenbyte인 것을 알 수 있고, OEP는 jmp문으로 점프하는 부분일 것이다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fbyy7qk%2FbtqzQ8dJ0F4%2F3uARiG7JUDYFgzg1BUFfjk%2Fimg.png)
+
+하지만 stolenByte때문에 0040100C가 OEP는 아니다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FkEXKs%2FbtqzT5mqrZo%2FVol8l9yv6KKizoKkmTgb20%2Fimg.png)
+
+stolenbyte를 채워주고 언패킹을 진행하면 된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F6UOKb%2FbtqzVpxHywf%2FMlfPQYAvzBJUuwDwdrGxbK%2Fimg.png)

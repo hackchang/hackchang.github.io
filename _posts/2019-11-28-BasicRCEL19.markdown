@@ -1,0 +1,68 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L19 문제 풀이 Write Up"
+date:   2019-11-28
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L19 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F0zOYB%2Fbtqz2EpVt5D%2F4uklO19x7uu9go8kxeprvK%2Fimg.png)
+
+Basic RCE L19
+
+이 프로그램은 몇 밀리세컨드 후에 종료 되는가
+
+압축을 풀고, PEID에 올려봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbfaRAz%2Fbtqz4LacuBi%2Ffkkabsz5hy0ktoorxothWK%2Fimg.png)
+
+UPX로 패킹된 것을 볼 수 있고, 언패킹툴을 통해 언패킹을 진행했다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbRKn6Z%2Fbtqz4KbkkIn%2F3Tl3xqJjq7s53x2TSKEW00%2Fimg.png)
+
+언패킹을 진행하고, 올리디버거를 통해 실행시켜봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FwenZs%2Fbtqz3AUu5yV%2F76YlmfJEoDGoeamUy9DD80%2Fimg.png)
+
+안티디버깅이 되어있는 것을 볼 수 있었고, 함수검색을 통해 isdebugpresent를 검색해서 들어간다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FAxf50%2Fbtqz12doEGO%2FTtU5jPyk23Byc4xej9hpj1%2Fimg.png)
+
+해당 점프문 부분을 JNZ -> JZ로 바꿔 디버깅툴을 탐지하지 못하도록 한다.
+
+문제는 시간을 구하는 문제이므로, 함수검색에서 time을 검색해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FXi5r0%2Fbtqz2EwAtiR%2FNhyF9RKoJiRd7e2LTkOLNK%2Fimg.png)
+
+timeGetTime이라는 함수를 볼 수 있었고, 구글을 통해 검색해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FGbGdB%2Fbtqz3m9163G%2FFxyHxifAkPzKb902JCfvhK%2Fimg.png)
+
+시간과 관련된 함수인 것을 볼 수 있었고, timeGetTime 함수 모두에 BP를 걸었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FdGYKAL%2Fbtqz4LnJGrq%2FVFfHilKs5x9W6x8rE7Szy0%2Fimg.png)
+
+F9를 통해 실행시키면 00444C44에서 걸리는 것을 볼 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FrU1uL%2Fbtqz4jLLGgd%2FIszXjsOaEFAOl3Xb9llI9K%2Fimg.png)
+
+F8을 눌러 레지스터를 보면서 실행시켜본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcmcfdn%2Fbtqz25U35HF%2FT05ONq3mEDZKnWyuNFM541%2Fimg.png)
+
+CMP EAX,DWORD PTR DS:[EBX+4] 이 부분에서 시간을 비교하는 것을 알 수 있고, 
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fqzgnv%2Fbtqz5Alxxwd%2FDdx8Ks55ZPEqgOGZTKhJV1%2Fimg.png)
+
+EBX+4를 아래 데이터창에 쳐본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fc2Hvjo%2Fbtqz4LH23Wa%2FDSUbMGkaFtT2LHqSfZtSX0%2Fimg.png)
+
+70 2B 00 00 을 리틀엔디언으로 바꾸면 2B 70이다.
+
+즉 11120ms가 나온다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FGJrhv%2Fbtqz5ckRNv9%2Flp6Vl8mOJiJ9BkNxkirqQ1%2Fimg.png)

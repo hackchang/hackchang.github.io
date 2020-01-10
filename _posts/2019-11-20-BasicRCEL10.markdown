@@ -1,0 +1,58 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L10 문제 풀이 Write Up"
+date:   2019-11-20
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L10 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F15dbg%2FbtqzT4UwPHs%2FVcpfXiRliEb8RPWGZ1mVb1%2Fimg.png)
+
+OEP를 구한 후 '등록성공' 으로 가는 분기점의 OPCODE를 구하시오.
+
+정답인증은 OEP + OPCODE
+
+EX) 00400000EB03
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FmeIy5%2FbtqzSZ7eVxU%2F20EkUymSja4JpbVKO7XYH0%2Fimg.png)
+
+프로그램을 실행하면 이와같이 나온다.
+
+OEP를 구한다는 것은 패킹을 한다는 것으로 생각하면 될 것 같다.
+
+PEID를 통해 열어보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F6t3hz%2FbtqzQUlPh9D%2FK38GRhUK3YzMIzbcBBLDMk%2Fimg.png)
+
+ASPack으로 패킹이 된 것을 볼 수 있다.
+
+ASPack의 경우 OEP를 알아내는 방법은 다음과 같다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbLdEZW%2FbtqzP3XOltu%2FSdKK5BtwPKwbyDdT9h1I0k%2Fimg.png)
+
+검색을 통해 POPAD를 검색하여 
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FoOhOV%2FbtqzSPcIuS0%2FBCHx7GDsk29tiL2dHf1cD0%2Fimg.png)
+
+POPAD가 있는 부분을 찾아 BP를 걸고, F9를 누르게 되면
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FXzAOa%2FbtqzQVZgRFG%2FU98kreTYSKSiqTmg9RgIrK%2Fimg.png)
+
+00445834라는 OEP를 찾을 수 있게 된다. RETN부분에 BP를 한번더 걸고 F9로 실행 후 F8을 눌러 OEP(00445834)에 도달한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbfdT3c%2FbtqzQsQvG5s%2FJLu8zQX8zMdkmkoxUC3wz0%2Fimg.png)
+
+이게 정말 OEP인가 하겠지만 <b>Ctrl+A</b> 를 통해 코드를 다시 읽고, 스트링을 검색해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FA9uvd%2FbtqzRNTWU1J%2F6GCPtz4MukJSNJwrEvu0Pk%2Fimg.png)
+
+성공메세지가 출력되는 곳을 들어가본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbB2wig%2FbtqzT5lBRCo%2FRV0J3iSzFyK3m1ftjYtTa1%2Fimg.png)
+
+해당 점프문이 등록성공으로 가는 분기점이므로 OPCODE를 구할 수 있다.
+
+OEP+OPCODE를 통해 정답을 인증한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F5zuHv%2FbtqzTDJDEYr%2Fhpey7wMjNGWX6G0ts1Dbz1%2Fimg.png)

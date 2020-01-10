@@ -1,0 +1,55 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L12 문제 풀이 Write Up"
+date:   2019-11-20
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L12 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F8JO1z%2FbtqzVoS7hEN%2F82Xl813iEfiLnLrHhTEeb0%2Fimg.png)
+
+Basic RCE L12
+
+Key를 구한 후 입력하게 되면 성공메시지를 볼 수 있다.
+
+이때 성공메시지 대신 Key 값이 MessageBox에 출력 되도록 하려면 파일을 HexEdit로 오픈 한 다음 0x???? ~ 0x???? 영역에 Key 값을 overwrite 하면 된다.
+
+문제 : Key값과 + 주소영역을 찾으시오
+
+Ex) 7777777????????
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fma31k%2FbtqzSQcrdxo%2FkiOuzZjKkKYgQ7wbBMrtx1%2Fimg.png)
+
+압축을 풀고, 실행하면 위와같은 화면이 나온다.
+
+체크를 눌러도 반응이 없어 올리디버거로 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbePasM%2FbtqzT5msdd4%2FDN0FTLXEFR9EuwZWUkPyo1%2Fimg.png)
+
+열어보면 키값으로 보이는 부분이 보인다.
+
+00401052에 BP를 걸고 실행해봤다.
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fbfr6Hv%2FbtqzR4aXW2P%2FuMucV2VVts9xdfSbSwcrr1%2Fimg.png)
+
+123을 적고 체크를 눌렀더니
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fb4xygf%2FbtqzU9aPgGz%2FRx7hZtPbiyYEFtx50sAGkk%2Fimg.png)
+
+EAX에 7B가 들어간 것을 볼 수 있다. <b>7B는 10진수로 123이다.</b>
+
+그 말은 입력값이 EAX로 들어가므로, EAX와 비교하는 부분이 체크부분인 것을 예상해볼 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F4eygG%2FbtqzRNm1dNc%2FpQLmF9kZheGcOE7FT4o0nK%2Fimg.png)
+
+그러므로, 저 문자열은 키값과 관련이 없는 문자열인 것이다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F04vX6%2FbtqzR4aYfPL%2FQgF7ct0U43Kqqd1maWkXm1%2Fimg.png)
+
+이 부분이 진짜 문자열과 비교하여 체크하는 부분이고, 7A2896BF와 비교하여 같을경우 성공메세지가 출력된다.
+
+이 부분을 10진수로 변환하여 체크하면 인증된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Foelwl%2FbtqzRM9AqFP%2FGK0cPy22AA3dKzkLmzKI20%2Fimg.png)
+

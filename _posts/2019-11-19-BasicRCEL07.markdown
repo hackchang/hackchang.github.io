@@ -1,0 +1,81 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L07 문제 풀이 Write Up"
+date:   2019-11-19
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L07 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbjBL2O%2FbtqzTCDVhZ8%2FVdKUvBkoS7yqgMyofKGFG1%2Fimg.png)
+
+Basic RCE L07
+
+컴퓨터 C 드라이브의 이름이 CodeEngn 일경우 시리얼이 생성될때 CodeEngn은 'ß어떤것'으로 변경되는가
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fo4G7O%2FbtqzSZlQjUs%2Fk2NNAceBE1CVKgFjkdvxcK%2Fimg.png)
+
+실행시키면 위와 같은 화면이 나오고, 체크버튼을 통해 인증을 하는 방식이다.
+
+올리디버거를 통해 열어본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcpZ5vo%2FbtqzQ9bTYiW%2FX0nRzoN1YEtGP14XNf3AIk%2Fimg.png)
+
+<b>스트링 검색</b>(우클릭 - Search for - All referenced strings)을 통해 문자열을 확인할 수 있었고,
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FeU23Uf%2FbtqzP4oL8zi%2FvvHKFPLIqf1Yo3Vd0knPT0%2Fimg.png)
+
+위에서 GetDlgItemTextA는 텍스트의 길이를 반환해준다.
+
+해당주소에 BP(F2)를 걸고, F9를 눌러 실행을 한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbT06hj%2FbtqzQrRBB3f%2FqWV5kzHS71UdItbRjOIlg1%2Fimg.png)
+
+BP에 걸려 해당주소까지만 실행이 되고, 실행창이 뜨면 CodeEngn을 적고 체크를 누른다.
+
+F8을 눌러 올리디버거에서 한 줄씩 실행하다보면
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fkw7bN%2FbtqzTCKF1kn%2F3Z7ArcMGS2NrLApfujujNK%2Fimg.png)
+
+EAX에 8이 담기는 것을 볼 수 있고, 그 다음으로 GetVolumeInformationA함수가 나오는데 이는 지정된 루트 디렉터리의 파일 시스템 및 볼륨에 대한 정보를 검색하는 함수이다.
+
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbnMBVs%2FbtqzQthzzy5%2FnYU63dkK2R4gUaKbG9Sje0%2Fimg.png)
+
+RootPathName = NULL이므로, C드라이브를 대상으로 검색한다. 검색에 성공하면 1을 반환하고, 실패하면 0을 반환한다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbP57u0%2FbtqzRN0KPJF%2F21F5hxkw14yJEXtB3qHiv0%2Fimg.png)
+
+성공적으로 검색한 것을 볼 수 있다.
+
+하지만, 볼륨명에 아무것도 나오지 않는 문제가 발생했다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fu1aBY%2FbtqzQ7kO7Qe%2Fz0JHLikUjIUQqPobFLA5Ik%2Fimg.png)
+
+검색을 통해 알아보던 중 로컬 디스크 (C:)는 이름을 지정해주지 않은 상태인 것을 알게되었다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F5NcFm%2FbtqzP4PQzeQ%2FgHUAXkMCXcfVMs7OEbJkX1%2Fimg.png)
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbSddSX%2FbtqzTC43Dui%2FspvNP045lQojt73J2d7IW1%2Fimg.png)
+
+이름을 변경하고, 다시 실행해보았다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FceWFIU%2FbtqzQ7E9X9i%2FKFECLuw3KgGx5TdtZxqaQk%2Fimg.png)
+
+정상적으로 볼륨명이 나오는 것을 볼 수 있었고,
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcQPSiZ%2FbtqzTCxaxR5%2FWd45756rjo9dCskv7xt5gK%2Fimg.png)
+
+해당 명령을 통해 문자(loca)를 2씩 더하는 것을 볼 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcFEKPN%2FbtqzP43pQvb%2FULuxj5Jl2ZtuoU1ru2KPck%2Fimg.png)
+
+해당 값을 보면 L2C-5781과 4562-ABEX는 고정이고,
+
+nqecl부분이 변경되는 것을 볼 수 있고, 이를 strcmp를 통해 같으면 0을 반환하여 성공하는 메세지를 띄워준다.
+
+따라서 CodeEngn으로 적용을 시켜보면 L2C-5781CodeEngn4562-ABEX인 것을 알 수 있다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbocyR4%2FbtqzT473Bro%2FY5RGekdVtY74QQkP6ypEi1%2Fimg.png)

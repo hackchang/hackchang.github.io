@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "[CodeEngn] Basic RCE L15 문제 풀이 Write Up"
+date:   2019-11-21
+tags: [reversing, writeup]
+sitemap :
+changfreq : daily
+priority : 1.0
+categories: [reversing,writeup]
+---
+
+![L15 문제](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FRVLRQ%2FbtqzU8pHUSm%2FkcX5Njxmzb3yB5Cnzkaxl0%2Fimg.png)
+
+Basic RCE L15
+
+Name이 CodeEngn일때 Serial을 구하시오
+
+압축을 풀고, 습관처럼 PEID에 올려봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcoHW4C%2FbtqzR2EsUuX%2Fy5h5uK7ot3JnypF4WIjRwK%2Fimg.png)
+
+따로 패킹이 되어있지 않은 것을 볼 수 있었고, 올리디버거를 통해 열어봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fb0Obgk%2FbtqzWr9VACK%2FnEqEqHKjMAkyGkp4URC0C0%2Fimg.png)
+
+스트링을 검색하고 CRACKED라는 성공메세지로 들어가본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbcEzXL%2FbtqzU8ccNd5%2Fe4nrZOPUe1NeIqKL2mwgK0%2Fimg.png)
+
+이 문제도 L14와 같이 EAX와 비교하여 같지않으면 0045854(Try Again !)으로 점프를 시킨다.
+
+비교문에 BP를 걸고 실행해봤다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbdUUMW%2FbtqzVoZ8dF6%2FBx0r3qVDR5ZeDeGMVTlK7K%2Fimg.png)
+
+레지스터를 보면 시리얼값으로 1이 들어간 것을 확인할 수 있었고, 48B844와 비교하므로, 아래 데이터창에 45B844를 검색해본다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FciiRbG%2FbtqzVnUtgT6%2FVbPVbS3bLKnjQilpCbxfxk%2Fimg.png)
+
+DWORD PTR DS는 4바이트 값이기 때문에 60 61 00 00 인 것을 알 수 있었다.
+
+여기서 주의할 점은 메모리 덤프 주소는 리틀 엔디언 방식으로 읽어야 한다는 것이다.
+
+리틀 엔디언 방식으로 하면 00 00 61 60이 된다. 16진수인 6160을 10진수로 변환하여 인증하면 된다.
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FsWiGz%2FbtqzSZtJwj3%2Fru0wnUANwIqSnRKElHqcok%2Fimg.png)
