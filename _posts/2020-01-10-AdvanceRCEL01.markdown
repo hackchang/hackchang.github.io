@@ -14,7 +14,7 @@ categories: [reversing,writeup]
 Basic을 모두 클리어하고, 다음 난이도인 Advance 문제를 풀이해보도록 하겠다.
 
 #Advance RCE L01
-
+---
 이 프로그램은 몇 밀리세컨드 후에 종료 되는가
 
 정답인증은 MD5 해쉬값(대문자) 변환 후 인증하시오
@@ -57,15 +57,15 @@ Basic 문제와 같이 안티디버깅이 적용되어 있었고, 똑같이 우�
 
 방법은 Basic에서 소개했기 때문에 따로 소개하지 않겠다.
 
-#####[안티디버깅 우회방법](https://hackchang.github.io/posts/reversing/writeup/BasicRCEL19.html)
-
+[안티디버깅 우회방법](https://hackchang.github.io/posts/reversing/writeup/BasicRCEL19.html)
+---
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FcEtTRh%2FbtqA56RJ5Qt%2F0schbBAteH4KGshtzLFkSK%2Fimg.png)
 
 실행을 시키면 해당 부분에서 브레이크가 걸리는 것을 볼 수 있다.
 
 F8을 눌러 한줄씩 실행하다보면 JNB점프문에서 점프하게된다.
 
-######JNB  : 왼쪽 인자의 값이 오른쪽 인자의 값보다 크거나 같으면 점프
+- JNB  : 왼쪽 인자의 값이 오른쪽 인자의 값보다 크거나 같으면 점프
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FPNzvi%2FbtqA2aaeCRK%2FReU0bcaCXfdsTrp6tbk8vK%2Fimg.png)
 
