@@ -10,7 +10,7 @@ head-title: HackChang's Blog
 title: HackChang's Blog
 
 baseurl: ""    # the subpath of your site, "/blog"
-url: "https://hackchang.github.io/"
+url: "https://hackchang.github.io"
 
 disqus-shortname: hackchang
 
