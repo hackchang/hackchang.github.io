@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>:: 카카오톡 공유하기 ::</title>
+<script type="text/JavaScript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type="text/javascript">
+    function shareKakaotalk() {
+        Kakao.init("0daf60ac81a7fc6e8b4944425a2645ff");      // 사용할 앱의 JavaScript 키를 설정
+        Kakao.Link.sendDefault({
+              objectType:"feed"
+            , content : {
+                  title:"100,000원을 받으세요"   // 콘텐츠의 타이틀
+                , imageUrl:"http://k.kakaocdn.net/dn/cGCgID/btqB1db9KyL/gCksTOzZMRY9W6vdX3jKkk/kakaolink40_original.png"   // 썸네일 이미지
+                , link : {
+                      mobileWebUrl:"https://hackchang.github.io/"   // 모바일 카카오톡에서 사용하는 웹 링크 URL
+                    , webUrl:"https://hackchang.github.io/" // PC버전 카카오톡에서 사용하는 웹 링크 URL
+                }
+            }
+            , buttons : [
+                {
+                      title:"받기"    // 버튼 제목
+                    , link : {
+                        mobileWebUrl:"https://hackchang.github.io/"   // 모바일 카카오톡에서 사용하는 웹 링크 URL
+                      , webUrl:"https://hackchang.github.io/" // PC버전 카카오톡에서 사용하는 웹 링크 URL
+                    }
+                }
+            ]
+        });
+    }
+</script>
+</head>
+<body>
+    <h1>카카오톡 공유하기</h1>
+    <input type="button" onClick="shareKakaotalk();" value="KAKOA Talk으로 공유하기"/>
+</body>
+</html>
