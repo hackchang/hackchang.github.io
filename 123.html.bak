@@ -72,10 +72,6 @@ for (var i=0; i<place.place_name; i++)
 		newname+=place.place_name[i];
 	}
 }
-var hw = document.getElementById('hw');
-hw.addEventListener('click',function(){
-	alert(newname);
-	});
 
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(place) {
@@ -97,7 +93,9 @@ function displayMarker(place) {
         infowindow.open(map, marker);
     });
 }
+
+document.alert(newname);
 </script>
-<input type="button" value="메시지1" onclick="alert(newname);" />
+<input type="button" value="메시지1" onclick="alert(place.place_name[0]);" />
 </body>
 </html>
