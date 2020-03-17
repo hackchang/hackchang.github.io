@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src=geolocation.js></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+    </script>
     <meta charset="utf-8">
     <title>커피</title>
     <style>
@@ -38,7 +42,7 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
         center: new kakao.maps.LatLng(36.820024, 127.155561), // 지도의 중심좌표
-        level: 5 // 지도의 확대 레벨
+        level: 2 // 지도의 확대 레벨
     };  
 
 // 지도를 생성합니다    
@@ -56,6 +60,7 @@ for ( var count = 1; count <= 100; count++) {
         page : count
     }); 
 }
+
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function placesSearchCB (data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
@@ -64,30 +69,25 @@ function placesSearchCB (data, status, pagination) {
         }       
     }
 }
-newname='';
-for (var i=0; i<place.place_name; i++)
-{
-	if (place.place_name[i]!=' ')
-	{
-		newname+=place.place_name[i];
-	}
-}
-var hw = document.getElementById('hw');
-hw.addEventListener('click',function(){
-	alert(newname);
-	});
-
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(place) {
     // 마커를 생성하고 지도에 표시합니다
     var marker = new kakao.maps.Marker({
         map: map,
-        position: new kakao.maps.LatLng(place.y, place.x) 
+        position: new kakao.maps.LatLng(place.y, place.x),
+        image: new kakao.maps.MarkerImage("http://lolhc.woobi.co.kr/coffee.png",new kakao.maps.Size(22,22))
 
     });
 
     // 마커에 클릭이벤트를 등록합니다
     kakao.maps.event.addListener(marker, 'click', function() {
+        var newname='';// 체인점 제거
+        for (i=0;i<place.place_name.length;i++){
+            if(place.place_name[i]!=' '){
+                newname+=place.place_name[i]
+            }
+            else{break;}
+        }
         // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
         infowindow.setContent('<div class="placeinfo">' +
                     '   <a class="title" href="https://www.instagram.com/explore/tags/' + newname + '" target="_blank" title="' + place.place_name + '">' + place.place_name + '</a>'+'    <span title="' + place.road_address_name + '">' + place.road_address_name + '</span>' +
@@ -96,8 +96,12 @@ function displayMarker(place) {
                 '<div class="after"></div>');
         infowindow.open(map, marker);
     });
+
+    
 }
+
 </script>
-<input type="button" value="메시지1" onclick="alert(newname);" />
+<input type="button" style=height:100px;width:100px; value="메시지1" onclick="loadPost();" />
+
 </body>
 </html>
