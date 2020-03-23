@@ -17,17 +17,9 @@ function successCallback(position) {
             position: locPosition,
             image: new kakao.maps.MarkerImage("marker.png", new kakao.maps.Size(40, 33))
         });
-    
-    MarkPosition.setMap(null);
+    //전에 위치 남아있는거 고쳐야됨
     map.setCenter(locPosition); //현재위치이동
     MarkPosition.setMap(map); //현재위치마크
-    ps.categorySearch('CE7', placesSearchCB, {
-        location: locPosition,
-        radius: 1000,
-        size: 15,
-        page: 1,
-        useMapBounds:true
-    });
 }
 
 ////여기부터 지도움직이면 자동으로 찾기
