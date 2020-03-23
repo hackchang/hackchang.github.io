@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="/coffee.ico" />
+    <meta charset="utf-8">
+    <title>커피</title>
+    <link rel="stylesheet" href="/style.css"/>
+    <link rel="stylesheet" href="/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="/bootstrap.css"/>
+    <script type="text/javascript" scr="/bootstrap.js"></script>
+    
+</head>
+<body style="overflow: hidden;">
+    <div class="map_wrap">
+        <div id="map" style="width:100%;height:500px;position:relative;"></div>
+        <span id="refresh">
+            <img onclick="loadPost();" title="현재위치" id="wrap_image" src="refresh.png">
+        </span>
+        <span id="search">
+            <img onclick="toggle_search();" title="검색" id="wrap_image" src="search.png">
+        </span>
+    </div>
+    <p></p>
+    <span class="search_form">
+        <input id="search_input" type="text" onkeyup="enter();" placeholder="장소를 입력해주세요.">
+        <button id="search_button" onclick="search_place();">검색</button>
+    </span>
+    <script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?key=AIzaSyDsEDeiGg5XNJUkPGqFQOf_ucckyDtBvC4&sensor=true"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=10120d3ef900c7d1f9c4e11361c2a5c4&libraries=services"></script>
+    <script type="text/javascript" src=/script.js></script>
+    <script type="text/javascript" src=/geoloc.js></script>
+
+    <div id="menu_wrap" width="500px" height="150px">
+        <hr>
+        <ul id="placesList"></ul>
+        <div id="pagination"></div>
+    </div>
+    
+    
+</body>
+
+</html>

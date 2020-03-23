@@ -1,0 +1,226 @@
+.map_wrap,
+.map_wrap * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', dotum, '바탕', sans-serif;
+    font-size: 12px;
+}
+
+.map_wrap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+
+
+#wrap_image {
+    height: 50px;
+    display: block;
+    margin: 0px auto;
+}
+
+.placeinfo_wrap {
+    position: absolute;
+    bottom: 28px;
+    left: -150px;
+    width: 300px;
+}
+
+.placeinfo {
+    position: relative;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    background: #fff;
+}
+
+.placeinfo:nth-of-type(n) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+}
+
+.placeinfo_wrap .after {
+    content: '';
+    position: relative;
+    margin-left: -12px;
+    left: 50%;
+    width: 22px;
+    height: 12px;
+    background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+}
+
+.placeinfo a,
+.placeinfo a:hover,
+.placeinfo a:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+.placeinfo a,
+.placeinfo span {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.placeinfo span {
+    margin: 5px 5px 0 5px;
+    cursor: default;
+    font-size: 13px;
+}
+
+.placeinfo .title {
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 6px 6px 0 0;
+    margin: -1px -1px 0 -1px;
+    padding: 10px;
+    color: #fff;
+    background: #d95050;
+    background: #d95050 url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
+}
+
+.placeinfo .tel {
+    color: #0f7833;
+}
+
+.placeinfo .jibun {
+    color: #999;
+    font-size: 11px;
+    margin-top: 0;
+}
+
+#refresh {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 7px;
+    border: 2px solid #909090;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+    background: #fff;
+    z-index: 2;
+    cursor: pointer;
+}
+
+#refresh.on {
+    background: #eee;
+}
+
+#refresh:hover {
+    background: #ffe6e6;
+    border-left: 1px solid #acacac;
+    margin-left: -1px;
+}
+
+#search {
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    border-radius: 7px;
+    border: 2px solid #909090;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+    background: #fff;
+    z-index: 2;
+    cursor: pointer;
+}
+
+#search.on {
+    background: #eee;
+}
+
+#search:hover {
+    background: #ffe6e6;
+    border-left: 1px solid #acacac;
+    margin-left: -1px;
+}
+
+.mystyle {
+    width: 100%;
+    padding: 25px;
+    background-color: coral;
+    color: white;
+    font-size: 25px;
+}
+
+#search_2 {
+    display: "none";
+}
+
+.search-form {
+    display: "none";
+}
+
+#search_wrap {
+    display: none;
+}
+
+/*검색폼*/
+input:-ms-input-placeholder {
+    color: #a8a8a8;
+}
+
+input::-webkit-input-placeholder {
+    color: #a8a8a8;
+}
+
+input::-moz-placeholder {
+    color: #a8a8a8;
+}
+
+.search_form {
+    position: absolute;
+    top:145px;
+    right:18px;
+    height: 40px;
+    width: 230px;
+    border: 2px solid #1b5ac2;
+    border-radius: 5px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+    background: #ffffff;
+    z-index: 1;
+    display: none;
+}
+
+#search_input {
+    position: absolute;
+    font-size: 14px;
+    width: 175px;
+    padding: 7px;
+    border: 0px;
+    border-radius: 7px;
+    outline: none;
+    float: left;
+}
+
+#search_button {
+    width: 50px;
+    height: 100%;
+    border: 0px;
+    background: #1b5ac2;
+    outline: none;
+    float: right;
+    color: #ffffff;
+    cursor: pointer;
+}
+#menu_wrap {position: relative; overflow-x:hidden; overflow-y: auto; top:-10px;left:-20px;padding-bottom: 20px;height:400px;width:100%;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+#menu_wrap hr {display: block; height: -5px;border: 0; border-top: 1px solid #5F5F5F;margin:3px;}
+#placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 5px;}
+#placesList .item span {display: block;margin-top:1px;}
+#placesList .info .gray {color:#8a8a8a;}
+#placesList .info .jibun {padding-left:26px;background:url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+#placesList .info .tel {color:#009900;}
+#pagination {position: relative; margin:10px auto;text-align: center; z-index: 1;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+::-webkit-scrollbar { width: 20px; border-radius: 5px;}
+/* 스크롤바의 width */
+::-webkit-scrollbar-track { background-color: #f0f0f0;  }
+/* 스크롤바의 전체 배경색 */
+::-webkit-scrollbar-thumb { border-radius: 5px;
+    background: linear-gradient(to bottom, #1697bf, #62b7ac); 
+}
+/* 스크롤바 색 */
+::-webkit-scrollbar-button { display: none; border-radius: 5px; }
