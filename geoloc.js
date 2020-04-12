@@ -15,11 +15,12 @@ function successCallback(position) {
         locPosition = new kakao.maps.LatLng(lat, lng), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
         MarkPosition = new kakao.maps.Marker({
             position: locPosition,
-            image: new kakao.maps.MarkerImage("marker.png", new kakao.maps.Size(40, 33))
+            image: new kakao.maps.MarkerImage("marker.png", new kakao.maps.Size(45, 45))
         });
     //전에 위치 남아있는거 고쳐야됨
     map.setCenter(locPosition); //현재위치이동
     MarkPosition.setMap(map); //현재위치마크
+    idle_event();
 }
 
 ////여기부터 지도움직이면 자동으로 찾기

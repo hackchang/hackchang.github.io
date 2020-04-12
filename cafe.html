@@ -2,44 +2,54 @@
 <html>
 <head>
     <link rel="icon" href="/coffee.ico" />
-    <meta charset="utf-8">
     <title>커피</title>
-    <link rel="stylesheet" href="/style.css"/>
+    <link rel="stylesheet" href="/style.css?after"/>
     <link rel="stylesheet" href="/bootstrap-theme.css"/>
     <link rel="stylesheet" href="/bootstrap.css"/>
     <script type="text/javascript" scr="/bootstrap.js"></script>
-    
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=0, user-scalable=no, target-densitydpi=medium-dpi" />
 </head>
-<body style="overflow: hidden;">
+<body>
+    <nav class="navbar navbar-dark bg-primary" style="z-index: 1; margin:0px; height:8%">
+        <h1 style="font-family: 'Do Hyeon';" class="text-left">커피맵</span>
+        <!-- Navbar content -->
+      </nav>
+
+      
     <div class="map_wrap">
-        <div id="map" style="width:100%;height:500px;position:relative;"></div>
-        <span id="refresh">
-            <img onclick="loadPost();" title="현재위치" id="wrap_image" src="refresh.png">
+        <div id="map" style="width:100%;height:100%;position:relative;"></div>
+        <span class="refresh">
+            <img id="refresh_img" onclick="loadPost();" title="현재위치" id="wrap_image" src="refresh.png">
         </span>
-        <span id="search">
-            <img onclick="toggle_search();" title="검색" id="wrap_image" src="search.png">
-        </span>
-    </div>
-    <p></p>
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="search_input" class="sr-only" placeholder="장소를 입력해주세요."></label>
+        </div>
     <span class="search_form">
         <input id="search_input" type="text" onkeyup="enter();" placeholder="장소를 입력해주세요.">
         <button id="search_button" onclick="search_place();">검색</button>
     </span>
+    </form>
     <script type="text/javascript"
         src="http://maps.google.com/maps/api/js?key=AIzaSyDsEDeiGg5XNJUkPGqFQOf_ucckyDtBvC4&sensor=true"></script>
     <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
     <script type="text/javascript"
         src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=10120d3ef900c7d1f9c4e11361c2a5c4&libraries=services"></script>
-    <script type="text/javascript" src=/script.js></script>
+    <script type="text/javascript" src=/script.js?after></script>
     <script type="text/javascript" src=/geoloc.js></script>
-
-    <div id="menu_wrap" width="500px" height="150px">
-        <hr>
-        <ul id="placesList"></ul>
+</div>
+    <div class="scrollbar scrollbar-primary"id="menu_wrap">
+        <div id="placesList"></div>
         <div id="pagination"></div>
     </div>
-    
-    
+    <div class="idle_event">
+        <button type="button" class="btn btn-primary" onclick="idle_event();">현재 위치에서 재탐색</button>
+    </div>
 </body>
 
 </html>
