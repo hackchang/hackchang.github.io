@@ -1,0 +1,495 @@
+/* ===== CSS Variables / Themes ===== */
+:root,
+[data-theme="dark"] {
+  --bg: #1e1e2e;
+  --bg-header: #181825;
+  --text: #cdd6f4;
+  --text-muted: #6c7086;
+  --prompt-user: #a6e3a1;
+  --prompt-at: #cdd6f4;
+  --prompt-host: #89b4fa;
+  --prompt-path: #cba6f7;
+  --accent: #f9e2af;
+  --link: #89dceb;
+  --error: #f38ba8;
+  --success: #a6e3a1;
+  --warning: #f9e2af;
+  --btn-close: #f38ba8;
+  --btn-minimize: #f9e2af;
+  --btn-maximize: #a6e3a1;
+  --selection: rgba(137, 180, 250, 0.3);
+  --scrollbar: #45475a;
+  --border: #313244;
+}
+
+[data-theme="hacker"] {
+  --bg: #0a0a0a;
+  --bg-header: #0f0f0f;
+  --text: #00ff41;
+  --text-muted: #008f11;
+  --prompt-user: #00ff41;
+  --prompt-at: #00ff41;
+  --prompt-host: #00ff41;
+  --prompt-path: #00cc33;
+  --accent: #39ff14;
+  --link: #00ff41;
+  --error: #ff0040;
+  --success: #00ff41;
+  --warning: #ffff00;
+  --btn-close: #ff0040;
+  --btn-minimize: #ffff00;
+  --btn-maximize: #00ff41;
+  --selection: rgba(0, 255, 65, 0.2);
+  --scrollbar: #1a3a1a;
+  --border: #1a3a1a;
+}
+
+[data-theme="light"] {
+  --bg: #eff1f5;
+  --bg-header: #e6e9ef;
+  --text: #4c4f69;
+  --text-muted: #9ca0b0;
+  --prompt-user: #40a02b;
+  --prompt-at: #4c4f69;
+  --prompt-host: #1e66f5;
+  --prompt-path: #8839ef;
+  --accent: #df8e1d;
+  --link: #04a5e5;
+  --error: #d20f39;
+  --success: #40a02b;
+  --warning: #df8e1d;
+  --btn-close: #d20f39;
+  --btn-minimize: #df8e1d;
+  --btn-maximize: #40a02b;
+  --selection: rgba(30, 102, 245, 0.2);
+  --scrollbar: #bcc0cc;
+  --border: #ccd0da;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+body {
+  background: #11111b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Nanum Gothic Coding', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  padding: 20px;
+}
+
+/* ===== Terminal Container ===== */
+#terminal {
+  width: 100%;
+  max-width: 1200px;
+  height: 90vh;
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+}
+
+/* ===== Terminal Header (Title Bar) ===== */
+#terminal-header {
+  background: var(--bg-header);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.buttons span {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.btn-close { background: var(--btn-close); }
+.btn-minimize { background: var(--btn-minimize); }
+.btn-maximize { background: var(--btn-maximize); }
+
+#terminal-header .title {
+  flex: 1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+#terminal-header .spacer {
+  width: 55px;
+}
+
+/* ===== Terminal Body ===== */
+#terminal-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) transparent;
+}
+
+#terminal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#terminal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#terminal-body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 3px;
+}
+
+/* ===== Output Area ===== */
+#output .line {
+  margin-bottom: 2px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#output .cmd-line {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+#output .cmd-line .prompt {
+  color: var(--prompt-user);
+}
+
+#output .cmd-line .cmd-text {
+  color: var(--text);
+}
+
+/* ===== Prompt Styling ===== */
+.prompt {
+  color: var(--prompt-user);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.prompt .user { color: var(--prompt-user); }
+.prompt .at { color: var(--prompt-at); }
+.prompt .host { color: var(--prompt-host); }
+.prompt .path { color: var(--prompt-path); }
+
+/* ===== Input Line ===== */
+#input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+#command-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  caret-color: var(--accent);
+  line-height: 1.6;
+}
+
+/* ===== Output Formatting ===== */
+.ascii-art {
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: pre;
+  overflow-x: auto;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+}
+
+.ascii-hacker {
+  color: var(--prompt-user);
+  font-size: 11px;
+  line-height: 1.1;
+  white-space: pre;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* ===== Welcome 2-Column Layout ===== */
+.welcome-container {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.welcome-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.welcome-left .ascii-art {
+  font-size: clamp(6px, 1.1vw, 12px);
+  line-height: 1.15;
+  overflow-x: hidden;
+}
+
+.welcome-right {
+  flex-shrink: 0;
+}
+
+.welcome-right .ascii-art {
+  color: var(--prompt-user);
+  font-size: clamp(6px, 1vw, 11px);
+  line-height: 1.15;
+}
+
+.welcome-msg {
+  margin: 4px 0;
+}
+
+.welcome-msg .version {
+  color: var(--text-muted);
+}
+
+.divider {
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+
+.help-row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.help-cmd {
+  color: var(--accent);
+  min-width: 120px;
+  font-weight: bold;
+}
+
+.help-desc {
+  color: var(--text-muted);
+}
+
+.section-title {
+  color: var(--accent);
+  font-weight: bold;
+  margin: 8px 0 4px;
+  font-size: 15px;
+}
+
+.info-label {
+  color: var(--prompt-host);
+  min-width: 100px;
+  display: inline-block;
+}
+
+.info-value {
+  color: var(--text);
+}
+
+.skill-category {
+  color: var(--prompt-host);
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.skill-items {
+  color: var(--text);
+  padding-left: 16px;
+}
+
+.skill-item {
+  color: var(--text);
+  padding-left: 16px;
+  line-height: 1.5;
+}
+
+.project-name {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.project-desc {
+  color: var(--text-muted);
+  padding-left: 16px;
+}
+
+.project-tech {
+  color: var(--prompt-path);
+  padding-left: 16px;
+  font-size: 12px;
+}
+
+.project-link a,
+.social-link a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.project-link a:hover,
+.social-link a:hover {
+  text-decoration: underline;
+}
+
+.social-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.social-icon {
+  color: var(--accent);
+  min-width: 20px;
+  text-align: center;
+}
+
+.social-name {
+  color: var(--prompt-host);
+  min-width: 100px;
+}
+
+.edu-name {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.edu-detail {
+  color: var(--text-muted);
+  padding-left: 16px;
+}
+
+.error-msg {
+  color: var(--error);
+}
+
+.success-msg {
+  color: var(--success);
+}
+
+.warning-msg {
+  color: var(--warning);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tab-suggestion {
+  color: var(--text-muted);
+}
+
+/* ===== Animations ===== */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+#command-input:focus {
+  caret-color: var(--accent);
+}
+
+/* ===== Responsive ===== */
+
+/* Tablet */
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+
+  #terminal {
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+
+  #terminal-body {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .welcome-left .ascii-art {
+    font-size: clamp(5px, 2vw, 9px);
+  }
+
+  .welcome-right .ascii-art {
+    font-size: clamp(5px, 1.5vw, 8px);
+  }
+
+  .help-cmd {
+    min-width: 90px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  #terminal-body {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .welcome-container {
+    flex-direction: column;
+  }
+
+  /* 로고 95자 기준: (뷰포트 - 패딩20px) / 58 ≈ 맞는 폰트 사이즈 */
+  .welcome-left .ascii-art {
+    font-size: calc((100vw - 24px) / 58);
+  }
+
+  .welcome-right {
+    align-self: center;
+  }
+
+  .welcome-right .ascii-art {
+    font-size: calc((100vw - 24px) / 75);
+  }
+
+  .prompt {
+    font-size: 11px;
+    margin-right: 4px;
+  }
+
+  #command-input {
+    font-size: 12px;
+  }
+
+  .help-cmd {
+    min-width: 70px;
+    font-size: 12px;
+  }
+
+  .info-label {
+    min-width: 70px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .welcome-right {
+    display: none;
+  }
+}

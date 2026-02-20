@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hackchang ~ terminal</title>
+  <meta name="description" content="hackchang's terminal-style portfolio">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+</head>
+<body>
+  <div id="terminal">
+    <div id="terminal-header">
+      <div class="buttons">
+        <span class="btn-close"></span>
+        <span class="btn-minimize"></span>
+        <span class="btn-maximize"></span>
+      </div>
+      <div class="title">visitor@hackchang.sh: ~</div>
+      <div class="spacer"></div>
+    </div>
+    <div id="terminal-body">
+      <div id="output"></div>
+      <div id="input-line">
+        <span class="prompt">visitor@hackchang.sh:~$</span>
+        <input type="text" id="command-input" autofocus autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
+
+  <script src="js/ascii.js"></script>
+  <script src="js/commands.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
