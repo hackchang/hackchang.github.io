@@ -86,8 +86,7 @@ const DATA = {
 
   ],
   socials: [
-    { icon: "◈", name: "GitHub", link: "https://github.com/hackchang", handle: "@hackchang" },
-    { icon: "◆", name: "Blog", link: "https://hackchang.tistory.com", handle: "hackchang Blog" }
+    { icon: "◈", name: "GitHub", link: "https://github.com/hackchang", handle: "@hackchang" }
   ]
 };
 
