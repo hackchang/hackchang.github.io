@@ -1,0 +1,1059 @@
+/* ===== CSS Variables / Themes ===== */
+:root,
+[data-theme="dark"] {
+  --bg: #1e1e2e;
+  --bg-header: #181825;
+  --text: #cdd6f4;
+  --text-muted: #6c7086;
+  --prompt-user: #a6e3a1;
+  --prompt-at: #cdd6f4;
+  --prompt-host: #89b4fa;
+  --prompt-path: #cba6f7;
+  --accent: #f9e2af;
+  --link: #89dceb;
+  --error: #f38ba8;
+  --success: #a6e3a1;
+  --warning: #f9e2af;
+  --btn-close: #f38ba8;
+  --btn-minimize: #f9e2af;
+  --btn-maximize: #a6e3a1;
+  --selection: rgba(137, 180, 250, 0.3);
+  --scrollbar: #45475a;
+  --border: #313244;
+}
+
+[data-theme="hacker"] {
+  --bg: #0a0a0a;
+  --bg-header: #0f0f0f;
+  --text: #00ff41;
+  --text-muted: #008f11;
+  --prompt-user: #00ff41;
+  --prompt-at: #00ff41;
+  --prompt-host: #00ff41;
+  --prompt-path: #00cc33;
+  --accent: #39ff14;
+  --link: #00ff41;
+  --error: #ff0040;
+  --success: #00ff41;
+  --warning: #ffff00;
+  --btn-close: #ff0040;
+  --btn-minimize: #ffff00;
+  --btn-maximize: #00ff41;
+  --selection: rgba(0, 255, 65, 0.2);
+  --scrollbar: #1a3a1a;
+  --border: #1a3a1a;
+}
+
+[data-theme="light"] {
+  --bg: #eff1f5;
+  --bg-header: #e6e9ef;
+  --text: #4c4f69;
+  --text-muted: #9ca0b0;
+  --prompt-user: #40a02b;
+  --prompt-at: #4c4f69;
+  --prompt-host: #1e66f5;
+  --prompt-path: #8839ef;
+  --accent: #df8e1d;
+  --link: #04a5e5;
+  --error: #d20f39;
+  --success: #40a02b;
+  --warning: #df8e1d;
+  --btn-close: #d20f39;
+  --btn-minimize: #df8e1d;
+  --btn-maximize: #40a02b;
+  --selection: rgba(30, 102, 245, 0.2);
+  --scrollbar: #bcc0cc;
+  --border: #ccd0da;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+body {
+  background: #11111b;
+  font-family: 'Nanum Gothic Coding', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  overflow: hidden;
+}
+
+/* ===== Terminal Container (전체 화면) ===== */
+#terminal {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Terminal Header (Title Bar) ===== */
+#terminal-header {
+  background: var(--bg-header);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.buttons span {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.btn-close { background: var(--btn-close); }
+.btn-minimize { background: var(--btn-minimize); }
+.btn-maximize { background: var(--btn-maximize); }
+
+#terminal-header .title {
+  flex: 1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+#terminal-header .spacer {
+  width: 55px;
+}
+
+/* ===== Terminal Body ===== */
+#terminal-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) transparent;
+}
+
+#terminal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#terminal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#terminal-body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 3px;
+}
+
+/* ===== Output Area ===== */
+#output .line {
+  margin-bottom: 2px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#output .cmd-line {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+#output .cmd-line .prompt {
+  color: var(--prompt-user);
+}
+
+#output .cmd-line .cmd-text {
+  color: var(--text);
+}
+
+/* ===== Prompt Styling ===== */
+.prompt {
+  color: var(--prompt-user);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.prompt .user { color: var(--prompt-user); }
+.prompt .at { color: var(--prompt-at); }
+.prompt .host { color: var(--prompt-host); }
+.prompt .path { color: var(--prompt-path); }
+
+/* ===== Input Line ===== */
+#input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+#command-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  caret-color: var(--accent);
+  line-height: 1.6;
+}
+
+/* ===== Output Formatting ===== */
+.ascii-art {
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: pre;
+  overflow-x: auto;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+}
+
+.ascii-hacker {
+  color: var(--prompt-user);
+  font-size: 11px;
+  line-height: 1.1;
+  white-space: pre;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* ===== Welcome 2-Column Layout ===== */
+.welcome-container {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.welcome-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.welcome-left .ascii-art {
+  font-size: clamp(6px, 1.1vw, 12px);
+  line-height: 1.15;
+  overflow-x: hidden;
+}
+
+.welcome-right {
+  flex-shrink: 0;
+}
+
+.welcome-right .ascii-art {
+  color: var(--prompt-user);
+  font-size: clamp(6px, 1vw, 11px);
+  line-height: 1.15;
+}
+
+.welcome-msg {
+  margin: 4px 0;
+}
+
+.welcome-msg .version {
+  color: var(--text-muted);
+}
+
+.divider {
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+
+.help-row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.help-cmd {
+  color: var(--accent);
+  min-width: 120px;
+  font-weight: bold;
+}
+
+.help-desc {
+  color: var(--text-muted);
+}
+
+.section-title {
+  color: var(--accent);
+  font-weight: bold;
+  margin: 8px 0 4px;
+  font-size: 15px;
+}
+
+.info-label {
+  color: var(--prompt-host);
+  min-width: 100px;
+  display: inline-block;
+}
+
+.info-value {
+  color: var(--text);
+}
+
+.skill-category {
+  color: var(--prompt-host);
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.skill-items {
+  color: var(--text);
+  padding-left: 16px;
+}
+
+.skill-item {
+  color: var(--text);
+  padding-left: 16px;
+  line-height: 1.5;
+}
+
+.project-name {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.project-desc {
+  color: var(--text-muted);
+  padding-left: 16px;
+}
+
+.project-tech {
+  color: var(--prompt-path);
+  padding-left: 16px;
+  font-size: 12px;
+}
+
+.project-link a,
+.social-link a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.project-link a:hover,
+.social-link a:hover {
+  text-decoration: underline;
+}
+
+.social-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.social-icon {
+  color: var(--accent);
+  min-width: 20px;
+  text-align: center;
+}
+
+.social-name {
+  color: var(--prompt-host);
+  min-width: 100px;
+}
+
+.edu-name {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.edu-detail {
+  color: var(--text-muted);
+  padding-left: 16px;
+}
+
+.error-msg {
+  color: var(--error);
+}
+
+.success-msg {
+  color: var(--success);
+}
+
+.warning-msg {
+  color: var(--warning);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tab-suggestion {
+  color: var(--text-muted);
+}
+
+/* ===== Animations ===== */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+#command-input:focus {
+  caret-color: var(--accent);
+}
+
+/* ===== career 명령 (경력 타임라인) ===== */
+.tl {
+  margin: 6px 0 2px 6px;
+  padding-left: 18px;
+  border-left: 2px solid var(--border);
+}
+
+.tl-item {
+  position: relative;
+  padding: 2px 0 14px;
+}
+
+.tl-item:last-child {
+  padding-bottom: 2px;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+}
+
+.tl-item.is-now::before {
+  background: var(--success);
+  border-color: var(--success);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--success) 25%, transparent);
+}
+
+.tl-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 2px;
+}
+
+.tl-company {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.tl-role {
+  color: var(--prompt-host);
+}
+
+.tl-period {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.tl-now {
+  color: var(--success);
+  font-size: 12px;
+  border: 1px solid var(--success);
+  border-radius: 10px;
+  padding: 0 8px;
+}
+
+.tl-line {
+  color: var(--text);
+  padding-left: 4px;
+  line-height: 1.6;
+}
+
+.tl-when {
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ===== flow 명령 (레드티밍 순서도) ===== */
+.flow-canvas {
+  margin: 8px 0 4px;
+}
+
+.flow-svg {
+  display: block;
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+  overflow: visible;
+}
+
+.flow-svg.is-v {
+  max-width: 420px;
+}
+
+.flow-svg text {
+  font-family: inherit;
+}
+
+.flow-edge {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: flow-draw 0.35s ease forwards;
+  animation-delay: calc(0.3s + var(--i) * 0.12s);
+}
+
+.flow-arrow {
+  fill: var(--text-muted);
+}
+
+.flow-loop {
+  fill: none;
+  stroke: #cba6f7;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+  opacity: 0.75;
+  animation: flow-march 1.2s linear infinite;
+}
+
+.flow-arrow-loop {
+  fill: #cba6f7;
+}
+
+.flow-loop-label {
+  fill: #cba6f7;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.flow-packet {
+  fill: var(--accent);
+  opacity: 0;
+  filter: drop-shadow(0 0 4px var(--accent));
+  animation: flow-show 0.3s 1.4s forwards;
+}
+
+.flow-node {
+  cursor: pointer;
+  outline: none;
+  opacity: 0;
+  animation: flow-in 0.4s ease forwards;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+.flow-node rect {
+  fill: var(--bg);
+  stroke: var(--c);
+  stroke-width: 1.5;
+}
+
+.flow-node:hover rect,
+.flow-node:focus-visible rect {
+  fill: color-mix(in srgb, var(--c) 12%, var(--bg));
+}
+
+.flow-node.is-sel rect {
+  fill: color-mix(in srgb, var(--c) 22%, var(--bg));
+  stroke-width: 2.5;
+}
+
+.flow-num {
+  fill: var(--c);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.flow-en {
+  fill: var(--text);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.flow-ko {
+  fill: var(--text-muted);
+  font-size: 12.5px;
+}
+
+.flow-block.no-anim .flow-node,
+.flow-block.no-anim .flow-edge {
+  animation: none;
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+.flow-block.no-anim .flow-packet {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes flow-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes flow-march {
+  to { stroke-dashoffset: -10; }
+}
+
+@keyframes flow-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes flow-show {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-node,
+  .flow-edge {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+
+  .flow-loop {
+    animation: none;
+  }
+
+  .flow-packet {
+    display: none;
+  }
+}
+
+.flow-detail {
+  max-width: 1100px;
+  margin-top: 6px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--c);
+  background: color-mix(in srgb, var(--c) 6%, transparent);
+}
+
+.flow-d-head {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.flow-d-num {
+  color: var(--c);
+  margin-right: 8px;
+}
+
+.flow-d-ko {
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+.flow-d-desc {
+  color: var(--text);
+  margin: 4px 0 2px;
+}
+
+.flow-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0 2px 16px;
+}
+
+.flow-chip {
+  font-size: 12px;
+  color: var(--c);
+  text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  border-radius: 4px;
+  padding: 1px 8px;
+}
+
+.flow-chip span {
+  color: var(--text-muted);
+}
+
+a.flow-chip:hover {
+  background: color-mix(in srgb, var(--c) 12%, transparent);
+}
+
+/* ===== research 명령 (취약점 연구 · 공개 advisory) ===== */
+/* 한글은 단어 단위로 줄바꿈, 긴 영문(ID·URL)은 넘치면 끊음 */
+.rs,
+.flow-detail {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.rs-sub {
+  color: var(--text-muted);
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.rs-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 820px;
+  margin: 10px 0 6px;
+}
+
+.rs-metric {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.rs-num {
+  color: var(--success);
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.rs-num.is-blue {
+  color: var(--prompt-host);
+}
+
+.rs-num.is-amber {
+  color: var(--accent);
+}
+
+.rs-lbl {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.rs-note {
+  max-width: 820px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-left: 3px solid var(--prompt-host);
+  padding: 4px 10px;
+  margin: 4px 0 2px;
+}
+
+.rs-note b {
+  color: var(--text);
+}
+
+.rs-asof {
+  white-space: nowrap;
+}
+
+.rs-lane {
+  color: var(--accent);
+}
+
+.adv {
+  max-width: 1100px;
+  margin: 4px 0 6px 16px;
+}
+
+.adv-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  padding: 3px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.adv-proj {
+  color: var(--prompt-host);
+  font-weight: bold;
+  min-width: 110px;
+}
+
+.adv-title {
+  color: var(--text);
+  flex: 1 1 300px;
+}
+
+.adv-co {
+  color: var(--text-muted);
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 6px;
+}
+
+.adv-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  font-size: 12px;
+}
+
+.adv-meta a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.adv-meta a:hover {
+  text-decoration: underline;
+}
+
+.adv-sev {
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+.adv-sev.is-critical {
+  color: var(--error);
+}
+
+.adv-sev.is-high {
+  color: #fab387;
+}
+
+.adv-sev.is-medium {
+  color: var(--accent);
+}
+
+.adv-cve {
+  color: var(--success);
+}
+
+@media (max-width: 640px) {
+  .rs-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adv {
+    margin-left: 4px;
+  }
+
+  .adv-proj {
+    min-width: 0;
+  }
+}
+
+/* ===== JavaScript가 꺼져 있을 때 안내 ===== */
+.noscript-msg {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: 10px 16px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--text);
+  background: var(--bg-header);
+  border-top: 1px solid var(--border);
+}
+
+.noscript-msg a {
+  color: var(--link);
+}
+
+/* ===== 허용되지 않은 곳(다른 도메인·iframe)에서 열렸을 때 안내 ===== */
+.guard {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.guard a {
+  color: var(--link);
+}
+
+.guard-copy {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ===== Fireworks overlay (fireworks 명령) ===== */
+#terminal {
+  position: relative;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+/* 첫 방문 인트로: 불꽃놀이가 끝나면 터미널 창이 열리듯 등장 */
+body.intro-playing #terminal {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+body.booting #input-line {
+  visibility: hidden;
+}
+
+.boot-line {
+  color: var(--text-muted);
+}
+
+.boot-ok {
+  color: var(--success);
+  white-space: pre;
+}
+
+/* 전체 화면 모드 (첫 방문 인트로 · 입력이 없을 때 화면보호기) */
+.fw-overlay.fw-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  cursor: pointer;
+  transition: opacity 0.6s ease;
+  animation: fw-fade-in 0.8s ease;
+}
+
+@keyframes fw-fade-in {
+  from { opacity: 0; }
+}
+
+.fw-overlay.fw-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fw-skip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+  animation: fw-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes fw-pulse {
+  50% { opacity: 0.35; }
+}
+
+.fw-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #03040a;
+  cursor: crosshair;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.fw-overlay canvas {
+  display: block;
+}
+
+.fw-hud {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.fw-title {
+  color: var(--accent);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+
+/* ===== Responsive ===== */
+
+/* Tablet */
+@media (max-width: 768px) {
+  #terminal-body {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .welcome-left .ascii-art {
+    font-size: clamp(5px, 2vw, 9px);
+  }
+
+  .welcome-right .ascii-art {
+    font-size: clamp(5px, 1.5vw, 8px);
+  }
+
+  .help-cmd {
+    min-width: 90px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  #terminal-body {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .welcome-container {
+    flex-direction: column;
+  }
+
+  /* 로고 95자 기준: (뷰포트 - 패딩20px) / 58 ≈ 맞는 폰트 사이즈 */
+  .welcome-left .ascii-art {
+    font-size: calc((100vw - 24px) / 58);
+  }
+
+  .welcome-right {
+    align-self: center;
+  }
+
+  .welcome-right .ascii-art {
+    font-size: calc((100vw - 24px) / 75);
+  }
+
+  .prompt {
+    font-size: 11px;
+    margin-right: 4px;
+  }
+
+  #command-input {
+    font-size: 12px;
+  }
+
+  .help-cmd {
+    min-width: 70px;
+    font-size: 12px;
+  }
+
+  .info-label {
+    min-width: 70px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .welcome-right {
+    display: none;
+  }
+}

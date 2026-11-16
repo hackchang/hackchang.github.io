@@ -1,0 +1,10 @@
+# 읽을 수 있는 원본 소스와 빌드 도구 (공개 저장소에 올리지 않음)
+src/
+node_modules/
+
+# 이력서 초안과 개인 사진 (공개 금지)
+portfolio*.html
+profile.jpg
+
+# 로컬 도구 설정
+.claude/

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hackchang · Red Team Operator</title>
+  <meta name="description" content="정해창(hackchang) — Red Team Operator. 공격자 시뮬레이션 · 웹/모바일/AD 모의해킹 · 취약점 연구 자동화. 터미널 스타일 포트폴리오.">
+  <meta name="author" content="hackchang">
+  <meta name="copyright" content="© 2026 hackchang. All rights reserved.">
+  <link rel="canonical" href="https://hackchang.github.io/">
+  <!-- 링크 공유 미리보기 (카카오톡 · 슬랙 · 링크드인 등). 이 사이트는 JS로 그려서, 미리보기는 이 태그만 보고 만듦 -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hackchang.github.io/">
+  <meta property="og:title" content="hackchang · Red Team Operator">
+  <meta property="og:description" content="공격자 시뮬레이션 · 모의해킹 · 취약점 연구 자동화 — 터미널 스타일 포트폴리오">
+  <meta property="og:locale" content="ko_KR">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+</head>
+<!-- intro-playing/booting: 첫 화면부터 터미널을 숨겨 두고 불꽃 인트로 → 부팅 로그 → 쉘 순서로 보여줌 (app.js가 해제) -->
+<body data-intro="fireworks" data-idle="60" class="intro-playing booting">
+  <!-- JS가 꺼져 있으면 숨겨 둔 터미널을 보이게 하고 안내 -->
+  <noscript>
+    <style>#terminal { opacity: 1 !important; transform: none !important; } #input-line { display: none; }</style>
+    <div class="noscript-msg">이 포트폴리오는 JavaScript가 필요합니다. · GitHub: <a href="https://github.com/hackchang">@hackchang</a></div>
+  </noscript>
+  <div id="terminal">
+    <div id="terminal-header">
+      <div class="buttons">
+        <span class="btn-close"></span>
+        <span class="btn-minimize"></span>
+        <span class="btn-maximize"></span>
+      </div>
+      <div class="title">visitor@hackchang.sh: ~</div>
+      <div class="spacer"></div>
+    </div>
+    <div id="terminal-body">
+      <div id="output"></div>
+      <div id="input-line">
+        <span class="prompt">visitor@hackchang.sh:~$</span>
+        <input type="text" id="command-input" aria-label="명령어 입력" autofocus autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
+
+  <script src="js/ascii.js"></script>
+  <script src="js/fireworks.js"></script>
+  <script src="js/flow.js"></script>
+  <script src="js/commands.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
