@@ -1,0 +1,1749 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Offensive Security 입문</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap">
+<style>
+@property --glow{syntax:'<color>';inherits:true;initial-value:#a98bff}
+:root{
+  --bg:#06080d;--text:#eef2f8;--muted:#9ba5b7;--dim:#5d687c;
+  --line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);
+  --card:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  --green:#3ee6a4;--red:#ff4f64;--amber:#ffb547;--blue:#5cb2ff;--violet:#a98bff;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',Consolas,'Pretendard Variable',Pretendard,'Malgun Gothic',monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{--glow:#a98bff;transition:--glow 1.2s ease}
+body[data-part="1"]{--glow:#a98bff}
+body[data-part="2"]{--glow:#5cb2ff}
+body[data-part="3"]{--glow:#ffb547}
+body[data-part="4"]{--glow:#ff4f64}
+body[data-part="5"]{--glow:#3ee6a4}
+body[data-part="6"]{--glow:#a98bff}
+body.idle{cursor:none}
+b,strong{font-weight:800}
+button{font-family:inherit}
+mark{background:transparent;color:inherit}
+
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 700px at 88% -8%,color-mix(in srgb,var(--glow) 20%,transparent),transparent 62%),
+    radial-gradient(900px 620px at -8% 108%,color-mix(in srgb,var(--glow) 11%,transparent),transparent 60%),
+    var(--bg)}
+#bg::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.034) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.034) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,#000 20%,transparent 80%);
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,#000 20%,transparent 80%);
+  animation:grid 40s linear infinite}
+@keyframes grid{to{background-position:72px 72px}}
+
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--s,1));z-index:1}
+.slide{position:absolute;inset:0;padding:110px 140px 100px;display:flex;flex-direction:column;justify-content:center;
+  font-size:38px;line-height:1.5;letter-spacing:-.01em;word-break:keep-all;
+  opacity:0;visibility:hidden;transform:translateX(70px) scale(.985);
+  transition:opacity .6s ease,transform .8s var(--ease),visibility 0s linear .8s}
+.slide.past{transform:translateX(-70px) scale(.985)}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .6s ease .05s,transform .8s var(--ease),visibility 0s}
+.slide.center{align-items:center;text-align:center}
+
+.slide .a{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .9s var(--ease)}
+.slide.active .a{opacity:1;transform:none;transition-delay:calc(var(--i,0)*100ms + 180ms)}
+
+.f{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .7s var(--ease),filter .7s ease}
+.f.zoom{transform:scale(.86)}
+.f.right{transform:translateX(60px)}
+.f.left{transform:translateX(-60px)}
+.f.blur{filter:blur(14px);transform:none}
+.f.on{opacity:1;transform:none;filter:none}
+.f.inl{display:inline-block}
+.f.stagger{opacity:1;transform:none}
+.f.stagger>*{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .6s var(--ease)}
+.f.stagger.on>*{opacity:1;transform:none;transition-delay:calc(var(--k,0)*110ms)}
+
+.kicker{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--glow);margin-bottom:20px}
+h2{font-size:76px;font-weight:800;letter-spacing:-.035em;line-height:1.18}
+h2.xl{font-size:100px;line-height:1.12}
+.lead{font-size:42px;color:var(--muted);line-height:1.5}
+.mono{font-family:var(--mono)}
+.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.blue{color:var(--blue)}.muted{color:var(--muted)}.white{color:var(--text)}
+.card{background:var(--card);border:1px solid var(--line2);border-radius:26px}
+.ic{display:inline-block;width:1em;height:1em;flex:none}
+.ic svg{display:block;width:100%;height:100%}
+.cursor{display:inline-block;width:.58em;height:1.05em;background:currentColor;vertical-align:-.16em;margin-left:4px;animation:blink 1s steps(1) infinite}
+.caret::after{content:'';display:inline-block;width:.55em;height:1em;background:currentColor;margin-left:3px;vertical-align:-.12em;animation:blink .8s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.conclude{font-size:48px;font-weight:600;margin-top:44px;line-height:1.45}
+.small-note{font-size:28px;color:var(--muted);margin-top:14px}
+.conclude-sub{display:block;font-size:32px;color:var(--muted);font-weight:500;margin-top:10px}
+
+.ko{font-family:var(--sans);letter-spacing:.01em;text-transform:none}
+
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;clip-path:inset(0 0 100% 0)}
+.glitch::before{color:#2ef2ff;animation:gl1 3.4s infinite steps(1)}
+.glitch::after{color:#ff2e88;animation:gl2 3.4s infinite steps(1)}
+@keyframes gl1{0%,86%,100%{clip-path:inset(0 0 100% 0);transform:none}87%{clip-path:inset(12% 0 62% 0);transform:translate(-7px,1px)}89%{clip-path:inset(48% 0 28% 0);transform:translate(6px,-2px)}91%{clip-path:inset(72% 0 6% 0);transform:translate(-4px,0)}93%{clip-path:inset(30% 0 50% 0);transform:translate(5px,1px)}}
+@keyframes gl2{0%,86%,100%{clip-path:inset(0 0 100% 0);transform:none}88%{clip-path:inset(60% 0 15% 0);transform:translate(7px,-1px)}90%{clip-path:inset(20% 0 64% 0);transform:translate(-6px,2px)}92%{clip-path:inset(4% 0 80% 0);transform:translate(4px,0)}}
+
+canvas.rain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55;
+  -webkit-mask-image:linear-gradient(90deg,transparent 5%,rgba(0,0,0,.35) 40%,#000 78%);
+  mask-image:linear-gradient(90deg,transparent 5%,rgba(0,0,0,.35) 40%,#000 78%)}
+.title-wrap{position:relative;z-index:1}
+h1.title{font-size:156px;font-weight:800;line-height:1.02;letter-spacing:-.045em;margin:6px 0 36px}
+.grad{background:linear-gradient(90deg,var(--green),var(--blue) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.title-foot{margin-top:96px;display:flex;justify-content:space-between;align-items:center;font-size:26px;color:var(--muted)}
+.prompt{font-family:var(--mono);font-size:28px;color:var(--text)}
+.prompt .cursor{color:var(--green)}
+
+.timeline{display:grid;grid-template-columns:5fr 12fr 13fr 18fr 7fr 5fr;gap:12px;margin:44px 0 76px}
+.seg{display:flex;flex-direction:column;gap:14px}
+.seg-name{min-height:84px;display:flex;align-items:flex-end;font-size:27px;font-weight:700;line-height:1.25}
+.seg-name em{font-style:normal;font-size:17px;font-weight:800;background:var(--red);color:#fff;padding:4px 12px;border-radius:99px;margin-left:10px;align-self:center;transform:translateY(22px)}
+.seg-bar{height:20px;border-radius:10px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .9s var(--ease);box-shadow:0 0 24px color-mix(in srgb,var(--c) 40%,transparent)}
+.slide.active .seg-bar{transform:scaleX(1);transition-delay:calc(var(--k)*150ms + 450ms)}
+.seg.core .seg-bar{box-shadow:0 0 40px color-mix(in srgb,var(--c) 70%,transparent)}
+.seg-time{font-family:var(--mono);font-size:21px;color:var(--muted)}
+.question{font-size:48px;font-weight:700;display:flex;align-items:center;gap:28px}
+.q-label{font-family:var(--mono);font-size:21px;letter-spacing:.14em;color:var(--glow);border:1px solid currentColor;padding:8px 18px;border-radius:99px;white-space:nowrap;font-weight:600}
+
+.who{display:grid;grid-template-columns:880px 1fr;gap:36px;margin-top:34px;align-items:stretch}
+.who-term{display:flex;flex-direction:column;border-radius:22px;border:1px solid var(--line2);background:#04060a;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.who-body{flex:1;display:flex;flex-direction:column;gap:12px;padding:24px 34px 26px}
+.who-ln{font-family:var(--mono);font-size:26px;line-height:1.5;color:#cfd7e3}
+.who-ln .ps{color:var(--green);margin-right:14px}
+.who-ln .cursor{color:var(--green)}
+.who-id{display:flex;align-items:baseline;gap:24px;padding-bottom:6px}
+.who-name{font-size:60px;font-weight:900;letter-spacing:-.03em;line-height:1.1}
+.who-role{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--glow)}
+.jobs{display:flex;flex-direction:column;gap:12px;padding-bottom:4px}
+.job{padding:16px 24px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.job.now{border-color:rgba(169,139,255,.5);background:rgba(169,139,255,.07)}
+.job-h{display:flex;align-items:center;gap:16px;font-size:30px;line-height:1.3}
+.job-h b{font-weight:800}
+.job-h .role{font-size:25px;color:var(--muted)}
+.job-t{margin-left:auto;font-family:var(--mono);font-size:19px;color:var(--muted);white-space:nowrap}
+.now-tag{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:800;color:var(--green);border:1px solid rgba(62,230,164,.5);border-radius:99px;padding:3px 12px;white-space:nowrap}
+.now-tag::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.6s steps(1) infinite}
+.job-d{font-size:23px;color:var(--muted);margin-top:4px;line-height:1.4}
+.wq{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .45s var(--ease)}
+.wq.on{opacity:1;transform:none}
+.who-side{display:flex;flex-direction:column;gap:20px}
+.tr{position:relative;overflow:hidden;flex:1;display:flex;align-items:center;padding:20px 36px;border-radius:24px;border:1px solid var(--line2);background:var(--card)}
+.tr .ic{position:absolute;right:30px;top:50%;width:132px;height:132px;transform:translateY(-50%);color:var(--glow);opacity:.22}
+.tr.top{border-color:rgba(169,139,255,.55);background:linear-gradient(180deg,rgba(169,139,255,.1),rgba(169,139,255,.02))}
+.tr-k{font-size:23px;color:var(--muted);line-height:1.3}
+.tr-v{font-size:54px;font-weight:900;letter-spacing:-.03em;line-height:1.12}
+.tr-s{font-size:20px;color:var(--muted);margin-top:4px;line-height:1.4}
+.tr-v .sep{color:var(--dim);font-weight:400;margin:0 .3em}
+.who-foot{font-size:40px;font-weight:600;margin-top:36px}
+.jobs.three{gap:10px}
+.jobs.three .job{padding:12px 24px}
+
+.stats{display:flex;gap:26px;margin:34px 0 40px}
+.stat{padding:26px 36px;border-radius:24px;background:rgba(255,255,255,.035);border:1px solid var(--line);min-width:300px}
+.stat b{display:block;font-size:76px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat b.txt{font-size:50px;line-height:1.5}
+.stat>span{font-size:26px;color:var(--muted)}
+.ks{margin-bottom:24px}
+.ks-label{font-size:26px;color:var(--muted);margin-bottom:12px}
+.ks-domain{display:inline-block;min-width:980px;min-height:90px;font-family:var(--mono);font-size:34px;color:var(--amber);background:rgba(255,181,71,.07);border:1px solid rgba(255,181,71,.28);border-radius:16px;padding:18px 26px}
+.ks-steps>div{font-size:38px;margin:8px 0}
+
+h2.mega{font-size:160px;line-height:1;letter-spacing:-.05em;margin:4px 0 26px}
+.charge{display:inline-flex;align-items:center;gap:18px;margin-top:34px;font-size:34px;padding:20px 30px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line2);align-self:flex-start}
+.charge-tag{font-size:20px;font-weight:800;color:var(--red);border:1px solid rgba(255,79,100,.5);border-radius:99px;padding:4px 14px}
+.bigq{font-size:66px;font-weight:800;margin-top:52px;letter-spacing:-.03em}
+
+.versus{display:grid;grid-template-columns:1fr 160px 1fr;align-items:center;margin:36px 0 18px;text-align:center}
+.vs-col .ic{width:112px;height:112px;display:block;margin:0 auto 14px}
+.vs-col.good .ic{color:var(--green)}.vs-col.bad .ic{color:var(--red)}
+.vs-col h3{font-size:52px;font-weight:800}
+.vs-mid{font-family:var(--mono);font-size:40px;color:var(--dim);font-weight:800}
+.vs-row{display:grid;grid-template-columns:1fr 160px 1fr;text-align:center;align-items:center;padding:20px 0;border-top:1px solid var(--line);font-size:38px}
+.vs-row em{font-style:normal;font-family:var(--mono);font-size:21px;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line2);border-radius:99px;padding:6px 0}
+.vs-row.key{font-weight:800;font-size:46px;border-radius:22px;border-top-color:transparent;background:linear-gradient(90deg,rgba(62,230,164,.1),transparent 38%,transparent 62%,rgba(255,79,100,.1))}
+.vs-row.key em{color:#fff;border-color:var(--glow);background:color-mix(in srgb,var(--glow) 28%,transparent)}
+.punch{font-size:46px;margin-top:44px;text-align:center}
+
+.grad-b{background:linear-gradient(90deg,var(--blue),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.purpose{font-size:54px;font-weight:700;margin:44px 0 54px}
+.strike{position:relative;display:inline-block;transition:color .4s ease .25s}
+.strike::after{content:'';position:absolute;left:-6px;right:-6px;top:55%;height:7px;background:var(--red);border-radius:4px;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.strike.on{color:var(--dim)}
+.strike.on::after{transform:scaleX(1)}
+.chain{display:flex;align-items:center;gap:18px}
+.chain .pill{font-size:32px;padding:16px 30px;border-radius:99px;border:1px solid var(--line2);background:rgba(255,255,255,.03);white-space:nowrap}
+.chain .arr{color:var(--dim);font-size:30px}
+.chain .pill.end{border-color:var(--green);color:var(--green);background:rgba(62,230,164,.08);font-weight:800}
+
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+.field{padding:22px 26px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.fhead{display:flex;align-items:center;justify-content:space-between}
+.field .ic{width:44px;height:44px;color:var(--glow)}
+.field h3{font-size:32px;font-weight:800;line-height:1.2}
+.field .en{font-family:var(--mono);font-size:15px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.field p{font-size:23px;color:var(--muted);line-height:1.45;flex:1}
+.perm{font-size:20px;padding:10px 14px;border-radius:12px;border:1px dashed var(--line2);color:var(--muted);transition:all .5s ease;margin-top:4px}
+.perm b{font-family:var(--mono);font-size:14px;letter-spacing:.16em;color:var(--dim);margin-right:10px;transition:color .5s}
+.field.new{border-color:rgba(169,139,255,.55);background:linear-gradient(180deg,rgba(169,139,255,.1),rgba(169,139,255,.02))}
+.newtag{font-family:var(--mono);font-size:14px;font-weight:800;letter-spacing:.1em;color:#0b0716;background:var(--violet);padding:3px 12px;border-radius:99px}
+.fields.on .perm{border-style:solid;border-color:var(--green);color:var(--text);background:rgba(62,230,164,.09);box-shadow:0 0 32px rgba(62,230,164,.18)}
+.fields.on .perm b{color:var(--green)}
+.field-foot{font-size:36px;font-weight:700;margin-top:22px}
+
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;margin-top:56px}
+.flow .step{position:relative;border:1px solid var(--line2);border-radius:24px;padding:34px 18px;background:var(--card);text-align:center;min-height:220px;display:flex;flex-direction:column;justify-content:center}
+.flow .step .n{font-family:var(--mono);font-size:22px;color:var(--glow);margin-bottom:10px;font-weight:800}
+.flow .step h4{font-size:34px;font-weight:800;line-height:1.25}
+.flow .step .en{font-family:var(--mono);font-size:16px;color:var(--dim);margin-top:10px;letter-spacing:.06em;text-transform:uppercase}
+.flow .step:not(:last-child)::after{content:'';position:absolute;right:-22px;top:50%;width:22px;height:2px;background:var(--line2)}
+.flow .step-in{transition:opacity .5s ease}
+.flow.on .step:not(.key) .step-in{opacity:.32}
+.flow .step{transition:border-color .5s,box-shadow .5s,opacity .7s ease,transform .9s var(--ease)}
+.flow.on .step.key{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset,0 0 44px rgba(62,230,164,.25)}
+.flow.on .step.key .n{color:var(--green)}
+.flow-anno{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;margin-top:24px;font-size:28px;text-align:center}
+.flow-anno .k{color:var(--green);font-weight:800;padding-top:14px}
+.flow-anno .mid{grid-column:2 / span 4;color:var(--muted);border-top:2px dashed var(--line2);padding-top:14px}
+.flow-foot{font-size:38px;margin-top:46px}
+
+.mega-lines{font-size:86px;font-weight:800;line-height:1.32;letter-spacing:-.035em}
+.mega-lines .l3{font-size:180px;line-height:1.15;margin-top:10px}
+.glow-green{color:var(--green);text-shadow:0 0 50px rgba(62,230,164,.5)}
+
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px}
+.ai-col{padding:28px 32px;border-radius:26px;border:1px solid var(--line2);background:var(--card)}
+.ai-col.atk{border-color:rgba(255,79,100,.45)}
+.ai-col.def{border-color:rgba(62,230,164,.45)}
+.ai-h{display:flex;gap:14px;align-items:center;font-size:34px;font-weight:800;margin-bottom:16px}
+.ai-h .ic{width:44px;height:44px}
+.atk .ai-h .ic{color:var(--red)}.def .ai-h .ic{color:var(--green)}
+.ai-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.ai-col li{display:flex;flex-direction:column;padding:14px 20px;border-radius:16px;background:rgba(255,255,255,.035)}
+.ai-col li b{font-size:30px}
+.ai-col li span{font-size:23px;color:var(--muted)}
+.ai-rule{margin-top:28px;font-size:38px;font-weight:600;padding:22px 30px;border-radius:20px;background:rgba(169,139,255,.08);border:1px solid rgba(169,139,255,.4);text-align:center}
+
+.env{display:flex;align-items:center;margin:60px 0 50px}
+.laptop{flex:1;position:relative;border:2px dashed var(--line2);border-radius:32px;padding:44px 40px 40px}
+.laptop .lbl{position:absolute;top:-20px;left:36px;background:var(--bg);padding:0 14px;font-family:var(--mono);font-size:20px;color:var(--muted);display:flex;gap:10px;align-items:center;letter-spacing:.06em}
+.laptop .lbl .ic{width:26px;height:26px}
+.vms{display:grid;grid-template-columns:1fr 220px 1fr;align-items:center}
+.vm{border-radius:22px;padding:30px;background:var(--card);border:1px solid var(--line2)}
+.vm .ic{width:50px;height:50px}
+.vm.atk .ic{color:var(--amber)}.vm.tgt .ic{color:var(--blue)}
+.vm h4{font-size:34px;font-weight:800;margin-top:12px}
+.vm p{font-size:24px;color:var(--muted)}
+.vlink{height:4px;position:relative;background:repeating-linear-gradient(90deg,var(--glow) 0 14px,transparent 14px 26px);animation:flowx 1s linear infinite}
+.vlink span{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:19px;color:var(--muted);white-space:nowrap;font-family:var(--mono)}
+@keyframes flowx{to{background-position:26px 0}}
+.cut{width:170px;height:4px;position:relative;background:repeating-linear-gradient(90deg,var(--dim) 0 10px,transparent 10px 20px)}
+.cut .ic{position:absolute;left:50%;top:50%;width:64px;height:64px;transform:translate(-50%,-50%);color:var(--red);background:var(--bg);border-radius:50%;filter:drop-shadow(0 0 14px rgba(255,79,100,.6))}
+.net{width:230px;text-align:center;color:var(--dim)}
+.net .ic{width:110px;height:110px;display:block;margin:0 auto}
+.net div{font-size:28px;margin-top:8px}
+.env-msg{font-size:46px;font-weight:600}
+
+.sqli{display:grid;grid-template-columns:600px 1fr;gap:40px;margin-top:28px;align-items:start}
+.win-bar{display:flex;gap:8px;align-items:center;padding:15px 20px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03)}
+.win-bar i{display:block;width:12px;height:12px;border-radius:50%}
+.win-bar i:nth-child(1){background:#ff5f57}.win-bar i:nth-child(2){background:#febc2e}.win-bar i:nth-child(3){background:#28c840}
+.win-bar span{margin-left:10px;font-size:17px;color:var(--muted);font-family:var(--mono)}
+.login{overflow:hidden;transition:border-color .4s,box-shadow .4s}
+.login.pwned{border-color:var(--red);box-shadow:0 0 70px rgba(255,79,100,.28)}
+.login-body{padding:26px 34px 30px}
+.login label{display:block;font-size:22px;color:var(--muted);margin:4px 0 8px}
+.input{height:64px;border-radius:14px;border:1px solid var(--line2);background:rgba(0,0,0,.28);padding:0 20px;display:flex;align-items:center;font-family:var(--mono);font-size:27px;margin-bottom:16px;white-space:pre;overflow:hidden}
+.btn{height:62px;border-radius:14px;background:var(--blue);color:#04111f;font-weight:800;font-size:27px;display:flex;align-items:center;justify-content:center;margin-top:6px}
+.sq-res{min-height:118px;margin-top:20px}
+.stamp{display:inline-block;font-size:40px;font-weight:900;color:var(--red);border:4px solid var(--red);border-radius:14px;padding:4px 22px;transform:rotate(-4deg);animation:stamp .5s var(--ease) both;letter-spacing:.04em}
+@keyframes stamp{0%{transform:scale(2.2) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(-4deg);opacity:1}}
+.res-sub{font-size:23px;color:var(--muted);margin-top:12px}
+.query{padding:28px 32px 30px}
+.q-lbl{font-family:var(--mono);font-size:17px;letter-spacing:.14em;color:var(--dim);margin-bottom:14px;text-transform:uppercase}
+.code{font-family:var(--mono);font-size:29px;line-height:1.75;white-space:pre;color:var(--text);border-radius:10px}
+.code .kw{color:var(--violet)}.code .val{color:var(--green)}.code .ph{color:var(--dim)}
+.code .inj{color:var(--amber);background:rgba(255,181,71,.12);border-radius:6px}
+.code .tru{color:#14110a;background:var(--amber);border-radius:6px;padding:0 3px}
+.code .cmt{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(255,79,100,.8);text-decoration-thickness:3px}
+.code.flash{animation:flash .8s ease}
+@keyframes flash{0%{background:rgba(255,181,71,.28)}100%{background:transparent}}
+.sq-anno{margin-top:22px;display:flex;flex-direction:column;gap:12px;min-height:40px}
+.anno{font-size:25px;display:flex;gap:14px;align-items:flex-start;animation:annoIn .5s var(--ease) both;animation-delay:calc(var(--k,0)*380ms)}
+.anno i{display:block;width:12px;height:12px;border-radius:50%;margin-top:13px;flex:none}
+.anno.ok i{background:var(--green)}.anno.inj i,.anno.tru i{background:var(--amber)}.anno.cmt i{background:var(--red)}
+.anno code{font-family:var(--mono);background:rgba(255,255,255,.08);padding:1px 8px;border-radius:6px;font-size:.92em}
+@keyframes annoIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.noanim,.noanim *{animation:none!important}
+.lesson{margin-top:24px;padding:24px 30px;border-radius:20px;border:1px solid rgba(62,230,164,.45);background:rgba(62,230,164,.07)}
+.lesson-h{font-size:30px;font-weight:700}
+.lesson-b{font-size:24px;color:var(--muted);margin-top:6px}
+
+.pw-grid{display:grid;grid-template-columns:1060px 1fr;gap:46px;margin-top:28px;align-items:start}
+.term{border-radius:22px;border:1px solid var(--line2);background:#04060a;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.term-body{font-family:var(--mono);font-size:25px;line-height:1.62;padding:24px 30px;min-height:540px;white-space:pre;color:#cfd7e3}
+.term-body .ps{color:var(--green)}
+.term-body .dm{color:var(--dim)}
+.term-body .pw{color:var(--red);font-weight:800}
+.term-body .done{color:var(--amber);font-weight:800}
+.term-body .cursor{color:var(--green)}
+.pw-side{display:flex;flex-direction:column;gap:20px;padding-top:4px}
+.bigstat{font-size:110px;font-weight:900;line-height:1;color:var(--red);letter-spacing:-.04em}
+.bigstat small{font-size:44px;margin-left:6px}
+.bigstat-sub{font-size:34px;font-weight:700;margin-top:8px}
+.bigstat-note{font-size:24px;color:var(--muted);margin-top:10px}
+.tips-h{font-family:var(--mono);font-size:19px;letter-spacing:.14em;color:var(--green);margin-bottom:12px;text-transform:uppercase}
+.tips ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.tips li{font-size:25px;padding-left:28px;position:relative;line-height:1.4}
+.tips li::before{content:'';position:absolute;left:0;top:.55em;width:12px;height:12px;border-radius:3px;background:var(--green)}
+
+.spot::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 0%,rgba(0,0,0,.55) 75%);pointer-events:none}
+.drama{position:relative;line-height:1.5}
+.drama .d1{font-size:56px;color:var(--muted);font-weight:600}
+.drama .d2{font-size:56px;color:var(--muted);font-weight:600;margin-top:18px}
+.drama .d3{font-size:132px;font-weight:900;color:var(--red);margin-top:36px;letter-spacing:-.04em;text-shadow:0 0 60px rgba(255,79,100,.45)}
+
+.law{font-size:56px;font-weight:600;line-height:1.65;padding:50px 60px;border-left:6px solid var(--glow);background:linear-gradient(90deg,rgba(255,79,100,.07),transparent);border-radius:0 28px 28px 0;margin-top:20px}
+.law .src{display:block;font-family:var(--mono);font-size:22px;color:var(--muted);margin-bottom:16px;letter-spacing:.08em;font-weight:600}
+.hl{--hlc:rgba(255,181,71,.38);background-image:linear-gradient(var(--hlc),var(--hlc));background-repeat:no-repeat;background-position:0 88%;background-size:0% 40%;transition:background-size .8s var(--ease),color .4s;padding:0 4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hl.on{background-size:100% 40%}
+.hl.redhl{--hlc:rgba(255,79,100,.5)}
+.hl.redhl.on{color:#fff}
+.law-ex{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:36px}
+.ex{padding:26px 32px;border-radius:22px;border:1px solid var(--line2);font-size:31px;background:rgba(255,255,255,.03)}
+.ex .tag{display:block;font-family:var(--mono);font-size:18px;letter-spacing:.12em;margin-bottom:8px;font-weight:600}
+.ex.amb .tag{color:var(--amber)}
+.ex.rd{border-color:rgba(255,79,100,.55);background:rgba(255,79,100,.07)}
+.ex.rd .tag{color:var(--red)}
+
+.pen{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:38px}
+.pcard{padding:34px 30px;border-radius:26px;border:1px solid var(--line2);background:var(--card);min-height:520px;display:flex;flex-direction:column}
+.pcard h4{font-size:33px;font-weight:800;line-height:1.3}
+.pcard .ref{font-family:var(--mono);font-size:17px;color:var(--dim);margin:12px 0 18px;line-height:1.5;min-height:52px}
+.pcard .pre{font-size:24px;color:var(--muted);min-height:36px}
+.pcard .num{font-size:124px;font-weight:900;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.pcard .num small{font-size:46px;font-weight:800;margin-left:6px;letter-spacing:0}
+.pcard .unit{font-size:26px;color:var(--muted);margin-top:8px}
+.ptag{display:inline-block;align-self:flex-start;font-size:20px;font-weight:800;padding:6px 14px;border-radius:99px;background:rgba(255,79,100,.16);color:var(--red);margin-top:14px}
+.pcard .fine{font-size:23px;color:var(--muted);margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
+.pcard.alert{border-color:var(--red);box-shadow:0 0 54px rgba(255,79,100,.22)}
+.pcard.alert .num{color:var(--red)}
+.foot{position:absolute;left:140px;bottom:56px;font-size:19px;color:var(--dim);font-family:var(--mono)}
+
+.bubbles{display:flex;flex-wrap:wrap;justify-content:center;gap:26px 30px;margin:50px 0 10px;max-width:1500px}
+.bub{position:relative;font-size:40px;font-weight:700;padding:24px 40px;border-radius:30px 30px 30px 8px;background:rgba(255,255,255,.06);border:1px solid var(--line2)}
+.bub::before{content:'';position:absolute;inset:-1px;border-radius:inherit;background:rgba(6,8,13,.6);opacity:0;transition:opacity .4s ease;transition-delay:calc(var(--k,0)*160ms + .25s)}
+.bub::after{content:'';position:absolute;left:26px;right:26px;top:50%;height:5px;background:var(--red);border-radius:3px;transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease);transition-delay:calc(var(--k,0)*160ms)}
+.bubbles.on .bub::before{opacity:1}
+.bubbles.on .bub::after{transform:scaleX(1)}
+
+.case{display:grid;grid-template-columns:1fr 700px;gap:30px 48px;align-items:start;margin-top:6px}
+.scen{padding:38px 44px;border-radius:30px;border:1px solid var(--line2);background:var(--card)}
+.scen .ic{width:62px;height:62px;color:var(--glow);display:block;margin-bottom:18px}
+.scen p{font-size:42px;font-weight:700;line-height:1.5}
+.votes{display:flex;gap:18px;margin-top:28px}
+.chip{font-size:32px;font-weight:800;padding:14px 40px;border-radius:99px;border:2px solid var(--line2);background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;transition:all .4s var(--ease)}
+.chip:hover{border-color:var(--muted)}
+.chip.picked{background:rgba(255,255,255,.14);border-color:#fff}
+.chip.picked::before{content:'';display:inline-block;width:12px;height:12px;border-radius:50%;background:#fff;margin-right:12px;vertical-align:4px}
+.chip.faded{opacity:.25}
+.chip.correct{transform:scale(1.08)}
+.chip.correct[data-tone="green"]{border-color:var(--green);background:rgba(62,230,164,.16);color:var(--green);box-shadow:0 0 44px rgba(62,230,164,.35)}
+.chip.correct[data-tone="amber"]{border-color:var(--amber);background:rgba(255,181,71,.16);color:var(--amber);box-shadow:0 0 44px rgba(255,181,71,.35)}
+.chip.correct[data-tone="red"]{border-color:var(--red);background:rgba(255,79,100,.16);color:var(--red);box-shadow:0 0 44px rgba(255,79,100,.4)}
+.verdict{padding:38px 42px;border-radius:30px;border:1px solid var(--line2);border-left:6px solid var(--vc);background:var(--card)}
+.v-red{--vc:var(--red)}.v-green{--vc:var(--green)}.v-amber{--vc:var(--amber)}
+.badge{display:flex;gap:14px;align-items:center;font-size:34px;font-weight:900;color:var(--vc);margin-bottom:20px}
+.badge::before{content:'';width:16px;height:16px;border-radius:50%;background:var(--vc);box-shadow:0 0 18px var(--vc)}
+.verdict ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+.verdict li{font-size:29px;line-height:1.45;padding-left:30px;position:relative}
+.verdict li::before{content:'';position:absolute;left:0;top:.7em;width:14px;height:3px;border-radius:2px;background:var(--vc)}
+.dd{grid-column:1 / -1;padding:22px 30px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.dd h5{font-size:28px;font-weight:800;margin-bottom:12px}
+.dd-row{display:flex;flex-wrap:wrap;gap:12px}
+.dd-row span{font-size:25px;padding:8px 20px;border-radius:99px;font-weight:600}
+.dd-row .do{background:rgba(62,230,164,.13);color:var(--green)}
+.dd-row .dont{background:rgba(255,79,100,.13);color:var(--red)}
+.twist{grid-column:1 / -1;display:flex;gap:26px;align-items:center;padding:24px 32px;border-radius:22px;background:rgba(255,79,100,.08);border:1px solid rgba(255,79,100,.5);font-size:32px}
+.twist .ic{width:52px;height:52px;color:var(--red)}
+
+.prin{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:42px}
+.pr{position:relative;overflow:hidden;padding:40px 34px;border-radius:28px;border:1px solid var(--line2);background:var(--card);min-height:460px}
+.pr .num{position:absolute;right:22px;top:6px;font-family:var(--mono);font-size:120px;font-weight:800;color:rgba(255,255,255,.045);line-height:1.1}
+.pr .ic{width:62px;height:62px;color:var(--green)}
+.pr h3{font-size:50px;font-weight:900;margin-top:24px}
+.pr .en{font-family:var(--mono);font-size:17px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.pr p{font-size:28px;color:var(--muted);margin-top:22px;line-height:1.5}
+.pr p b{color:var(--text)}
+
+.disc{display:flex;align-items:stretch;margin-top:44px}
+.dstep{flex:1;text-align:center;padding:32px 14px;border:1px solid var(--line2);border-radius:24px;background:var(--card)}
+.dstep .ic{width:56px;height:56px;color:var(--green);display:block;margin:0 auto 14px}
+.dstep h4{font-size:34px;font-weight:800}
+.dstep p{font-size:23px;color:var(--muted);margin-top:6px}
+.darrow{width:48px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:32px}
+.channels{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px}
+.chbox{padding:28px 32px;border-radius:22px;border:1px solid rgba(62,230,164,.35);background:rgba(62,230,164,.04)}
+.chbox.no{border-color:rgba(255,79,100,.45);background:rgba(255,79,100,.05)}
+.chbox h5{font-family:var(--mono);font-size:20px;letter-spacing:.14em;color:var(--green);margin-bottom:16px}
+.chbox.no h5{color:var(--red)}
+.tags{display:flex;flex-wrap:wrap;gap:12px}
+.tags span{font-size:25px;padding:9px 20px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+
+.plat{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.pl{padding:32px 34px;border-radius:24px;border:1px solid var(--line2);background:var(--card);min-height:230px}
+.pl.star{border-color:rgba(62,230,164,.6);box-shadow:0 0 40px rgba(62,230,164,.12)}
+.pl .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pl h4{font-size:35px;font-weight:800;line-height:1.2}
+.lv{font-size:18px;font-weight:800;padding:5px 14px;border-radius:99px;white-space:nowrap}
+.lv.easy{background:rgba(62,230,164,.15);color:var(--green)}
+.lv.mid{background:rgba(255,181,71,.15);color:var(--amber)}
+.pl p{font-size:25px;color:var(--muted);margin-top:12px;line-height:1.45}
+.pl .url{font-family:var(--mono);font-size:18px;color:var(--dim);margin-top:12px}
+
+.grow{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:42px}
+.gcol{padding:40px 38px;border-radius:28px;border:1px solid var(--line2);background:var(--card);display:flex;flex-direction:column}
+.gcol .ic{width:60px;height:60px;color:var(--green)}
+.gcol h3{font-size:42px;font-weight:800;margin:20px 0 18px}
+.gcol ul{list-style:none;display:flex;flex-direction:column;gap:12px;flex:1}
+.gcol li{font-size:28px;padding-left:26px;position:relative;line-height:1.4}
+.gcol li::before{content:'';position:absolute;left:0;top:.6em;width:10px;height:10px;border-radius:50%;background:var(--green)}
+.gnote{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:26px;color:var(--muted)}
+.gnote b{color:var(--text)}
+
+.pyr{display:flex;flex-direction:column-reverse;align-items:center;gap:16px;margin-top:40px}
+.layer{position:relative;border-radius:24px;padding:26px 40px;text-align:center;border:1px solid var(--line2)}
+.layer h4{font-size:38px;font-weight:800}
+.layer p{font-size:28px;color:var(--muted)}
+.layer.l1{width:780px;background:rgba(169,139,255,.1)}
+.layer.l2{width:1020px;background:rgba(92,178,255,.1)}
+.layer.l3{width:1420px;background:rgba(62,230,164,.12);border-color:rgba(62,230,164,.55);box-shadow:0 0 50px rgba(62,230,164,.12)}
+.layer.l3 p{color:var(--text)}
+.here{position:absolute;left:-26px;top:-20px;font-size:21px;font-weight:800;padding:6px 16px;border-radius:99px;background:var(--green);color:#03140c;transform:rotate(-5deg)}
+
+.tl{display:grid;grid-template-columns:repeat(4,1fr);margin:56px 0 36px;position:relative}
+.tl::before{content:'';position:absolute;left:0;right:0;top:12px;height:2px;background:var(--line2)}
+.tl-item{position:relative;padding:50px 34px 0 0}
+.tl-item::before{content:'';position:absolute;top:1px;left:0;width:20px;height:20px;border-radius:50%;background:var(--bg);border:4px solid var(--c);box-shadow:0 0 16px var(--c)}
+.tl-item .when{font-family:var(--mono);font-size:21px;color:var(--c);font-weight:600}
+.tl-item h4{font-size:38px;font-weight:800;margin-top:6px}
+.tl-item p{font-size:25px;color:var(--muted);margin-top:8px;line-height:1.45}
+.answer{font-size:72px;font-weight:900;letter-spacing:-.03em}
+.answer-sub{font-size:40px;font-weight:600;margin-top:16px;line-height:1.5}
+
+.qs{display:flex;flex-direction:column;gap:22px;margin-top:40px}
+.qrow{display:flex;align-items:center;gap:40px;padding:26px 44px;border-radius:26px;border:1px solid var(--line2);background:var(--card)}
+.qrow .qn{font-family:var(--mono);font-size:76px;font-weight:800;color:var(--green);width:80px;line-height:1}
+.qrow h3{font-size:56px;font-weight:800;line-height:1.2}
+.qrow p{font-size:28px;color:var(--muted)}
+.stoprule{display:flex;align-items:center;gap:30px;margin-top:32px;font-size:46px;font-weight:800;padding:26px 44px;border-radius:26px;background:rgba(255,79,100,.1);border:1px solid rgba(255,79,100,.55)}
+.stoprule .ic{width:76px;height:76px;color:var(--red)}
+
+.pledge{width:1340px;padding:56px 76px;border-radius:32px;border:1px solid var(--line2);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));text-align:left;margin-top:10px}
+.pledge h3{font-size:56px;font-weight:900;text-align:center;margin-bottom:34px;letter-spacing:-.02em}
+.pledge ol{list-style:none;counter-reset:p;display:flex;flex-direction:column;gap:16px}
+.pledge li{counter-increment:p;font-size:35px;display:flex;gap:26px;line-height:1.45}
+.pledge li::before{content:counter(p);font-family:var(--mono);color:var(--green);font-weight:800;width:30px;flex:none}
+.sign{display:flex;justify-content:flex-end;gap:60px;margin-top:44px;font-size:28px;color:var(--muted)}
+.sign span{display:inline-block;min-width:280px;border-bottom:2px solid var(--line2);padding-bottom:6px}
+
+.s-end canvas.rain{-webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 50%,transparent 25%,#000 80%);mask-image:radial-gradient(ellipse 60% 55% at 50% 50%,transparent 25%,#000 80%)}
+.end-wrap{position:relative;z-index:1}
+.qa{font-size:250px;font-weight:900;letter-spacing:-.06em;line-height:1}
+.qa .amp{color:var(--glow);margin:0 .04em}
+.end-sub{font-size:60px;font-weight:700;margin-top:20px}
+.end-mono{font-family:var(--mono);font-size:32px;color:var(--muted);margin-top:40px}
+.end-mono .cursor{color:var(--green)}
+
+.wc-grid{display:grid;grid-template-columns:1fr 470px;gap:40px;align-items:start}
+.price{padding:26px 30px 22px;border-radius:26px;border:1px solid rgba(255,181,71,.45);background:linear-gradient(180deg,rgba(255,181,71,.11),rgba(255,181,71,.02));text-align:center}
+.price-lbl{font-size:24px;color:var(--muted)}
+.price-usd{font-family:var(--mono);font-size:68px;font-weight:800;color:var(--amber);line-height:1.15}
+.price-krw{font-size:32px;font-weight:700;font-variant-numeric:tabular-nums}
+.cups{display:flex;justify-content:center;gap:40px;margin:26px 0 14px;padding-right:18px}
+.cup{position:relative;display:inline-block;width:60px;height:74px}
+.cup::before{content:'';position:absolute;left:-8px;right:-8px;top:-7px;height:7px;border-radius:4px;background:var(--text)}
+.cup::after{content:'';position:absolute;right:-21px;top:14px;width:16px;height:28px;border:5px solid var(--text);border-left:0;border-radius:0 14px 14px 0}
+.cup b{position:absolute;inset:0;border:5px solid var(--text);border-top:0;border-radius:0 0 18px 18px;overflow:hidden}
+.cup b::before{content:'';position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#c98a4b,#6b3f1d);transition:height .9s var(--ease);transition-delay:calc(var(--k,0)*280ms + .55s)}
+.price.on .cup b::before{height:84%}
+.price-cups{font-size:30px}
+.price-cups b{color:var(--amber)}
+.price-src{font-size:17px;color:var(--dim);margin-top:8px}
+
+.d82{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px;margin-top:34px;max-width:1340px}
+.d82-node{display:flex;flex-direction:column;padding:14px 24px;border-radius:16px;border:1px solid var(--line2);background:rgba(255,255,255,.03)}
+.d82-node span{font-family:var(--mono);font-size:20px;color:var(--muted)}
+.d82-node b{font-size:28px}
+.d82-node.g b{color:var(--green)}.d82-node.r b{color:var(--red)}
+.d82-line{position:relative;height:6px;border-radius:3px;background:rgba(255,255,255,.08)}
+.d82-line i{position:absolute;inset:0;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--red));transform:scaleX(0);transform-origin:left;transition:transform 1.4s var(--ease)}
+.slide.active .d82-line i{transform:scaleX(1);transition-delay:.9s}
+.d82-line em{position:absolute;left:50%;top:-50px;transform:translateX(-50%);font-style:normal;font-family:var(--mono);font-size:26px;font-weight:800;background:var(--bg);padding:2px 14px;border-radius:99px;border:1px solid var(--line2);white-space:nowrap}
+
+.combo{padding:20px 24px;border-radius:20px;border:1px solid var(--line2);background:var(--card)}
+.combo-h{font-size:22px;font-weight:800;color:var(--amber)}
+.combo-row{margin-top:12px}
+.combo-t{display:flex;justify-content:space-between;gap:10px;font-size:22px;color:var(--muted)}
+.combo-t b{color:var(--text)}
+.cbar{height:14px;border-radius:7px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}
+.cbar i{display:block;height:100%;width:0;border-radius:7px;background:var(--red);transition:width 1.2s var(--ease) .3s}
+.cbar.long i{background:var(--green)}
+.combo.on .cbar i{width:var(--w)}
+.combo-note{font-size:19px;color:var(--muted);margin-top:12px}
+.combo-note b{color:var(--green)}
+
+.ybar{position:relative;height:12px;border-radius:6px;margin-top:16px;
+  background:linear-gradient(90deg,transparent calc(50% - 1px),rgba(255,255,255,.2) calc(50% - 1px) calc(50% + 1px),transparent calc(50% + 1px)),rgba(255,255,255,.07)}
+.ybar i{position:absolute;left:var(--y0,0%);top:0;bottom:0;width:0;border-radius:6px;background:var(--text);transition:width 1s var(--ease) .35s}
+.pcard.on .ybar i{width:calc(var(--w) - var(--y0,0%))}
+.pcard.alert .ybar i{background:var(--red)}
+
+#hud{position:fixed;inset:0;pointer-events:none;z-index:10}
+#hud-chip{position:absolute;left:30px;top:24px;display:flex;align-items:center;gap:10px;font:600 14px var(--mono);letter-spacing:.14em;color:var(--muted);text-transform:uppercase;transition:opacity .4s}
+#hud-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--glow);box-shadow:0 0 12px var(--glow)}
+#hud-count{position:absolute;right:30px;bottom:16px;display:flex;align-items:center;gap:12px;font:500 13px var(--mono);color:var(--dim);transition:opacity .4s}
+.pips{display:flex;gap:5px}
+.pips i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15)}
+.pips i.on{background:var(--glow)}
+#hud-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.05)}
+#hud-bar{height:100%;width:0;background:var(--glow);box-shadow:0 0 12px var(--glow);transition:width .6s var(--ease)}
+#hud.off #hud-chip,#hud.off #hud-count{opacity:0}
+#hud-nav{position:absolute;right:26px;bottom:42px;display:flex;gap:8px;opacity:0;transition:opacity .3s;pointer-events:none}
+body.mouse #hud-nav{opacity:1;pointer-events:auto}
+#hud-nav button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line2);background:rgba(14,19,30,.9);color:var(--text);font-size:15px;cursor:pointer}
+#hud-nav button:hover{border-color:var(--glow)}
+
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(3,5,9,.74);display:none;align-items:center;justify-content:center;padding:40px}
+.overlay.open{display:flex}
+.panel{background:#0e131e;border:1px solid var(--line2);border-radius:18px;padding:26px 28px;width:min(1080px,94vw);max-height:86vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.panel.small{width:min(560px,94vw)}
+.panel-h{display:flex;justify-content:space-between;align-items:baseline;font-size:20px;font-weight:800;margin-bottom:6px}
+.panel-h span{font:500 13px var(--mono);color:var(--dim)}
+.m-part{font:600 12px var(--mono);letter-spacing:.14em;color:var(--muted);margin:18px 0 8px;text-transform:uppercase}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.m-item{all:unset;cursor:pointer;padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-size:15px;color:var(--text);display:flex;gap:10px;align-items:baseline}
+.m-item span{font-family:var(--mono);color:var(--dim);font-size:13px;min-width:20px}
+.m-item:hover{background:rgba(255,255,255,.05)}
+.m-item.cur{border-color:var(--glow);background:color-mix(in srgb,var(--glow) 12%,transparent)}
+.keys-t{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+.keys-t td{padding:8px 4px;border-bottom:1px solid var(--line);color:var(--muted)}
+.keys-t td:first-child{white-space:nowrap;padding-right:18px}
+kbd{font:600 12px var(--mono);border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;padding:2px 7px;color:var(--text);background:rgba(255,255,255,.04)}
+#black{position:fixed;inset:0;background:#000;z-index:30;opacity:0;pointer-events:none;transition:opacity .4s}
+#black.on{opacity:1;pointer-events:auto}
+#toast{position:fixed;left:50%;bottom:40px;transform:translate(-50%,16px);background:rgba(14,19,30,.94);border:1px solid var(--line2);border-radius:999px;padding:12px 22px;font-size:15px;color:var(--muted);opacity:0;transition:opacity .4s,transform .4s var(--ease);z-index:50;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  .slide,.slide.past{transform:none}
+  .slide .a,.f{transform:none!important}
+  .glitch::before,.glitch::after{display:none}
+  #bg::before,.vlink{animation:none}
+}
+
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{height:auto;overflow:visible;background:#06080d}
+  #bg,#hud,.overlay,#black,#toast{display:none!important}
+  #stage{position:static;transform:none!important;width:1920px;height:auto}
+  .slide{position:relative;inset:auto;width:1920px;height:1080px;opacity:1!important;visibility:visible!important;transform:none!important;break-after:page;page-break-after:always;overflow:hidden;
+    background:radial-gradient(1100px 700px at 88% -8%,rgba(169,139,255,.14),transparent 62%),#06080d}
+  .slide .a,.f,.f.stagger>*{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
+  .seg-bar{transform:none!important}
+  .d82-line i{transform:none!important}
+  .wq{opacity:1!important;transform:none!important}
+  canvas.rain,.glitch::before,.glitch::after,.cursor{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body data-part="1">
+<div id="bg"></div>
+
+<main id="stage">
+
+<section class="slide s-title" data-part="1" data-title="표지" data-hud="off" data-enter="titleType">
+  <canvas class="rain" width="1920" height="1080"></canvas>
+  <div class="title-wrap">
+    <div class="kicker a">정보보호학과 특강</div>
+    <h1 class="title a"><span class="glitch" data-text="Offensive">Offensive</span> Security<br><span class="grad">입문</span></h1>
+    <p class="lead a">공격을 배우는 이유, 그리고 절대 넘지 말아야 할 선</p>
+    <div class="title-foot a">
+      <div class="prompt"><span class="green">root@lecture</span><span class="muted">:~#</span> <span class="tcmd" data-type="./start --ethics=on"></span><span class="cursor"></span></div>
+      <div class="presenter">LG유플러스 보안거버넌스팀 정해창 · 조한익 · 2026</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="1" data-title="오늘의 흐름">
+  <div class="kicker a">Agenda · 60 min</div>
+  <h2 class="a">오늘의 흐름</h2>
+  <div class="timeline a">
+    <div class="seg" style="--c:#a98bff;--k:0"><div class="seg-name">오프닝</div><div class="seg-bar"></div><div class="seg-time">0–5분</div></div>
+    <div class="seg" style="--c:#5cb2ff;--k:1"><div class="seg-name">오펜시브<br>시큐리티란</div><div class="seg-bar"></div><div class="seg-time">5–17분</div></div>
+    <div class="seg" style="--c:#ffb547;--k:2"><div class="seg-name">라이브 데모</div><div class="seg-bar"></div><div class="seg-time">17–30분</div></div>
+    <div class="seg core" style="--c:#ff4f64;--k:3"><div class="seg-name">윤리와 법<em>오늘의 핵심</em></div><div class="seg-bar"></div><div class="seg-time">30–48분</div></div>
+    <div class="seg" style="--c:#3ee6a4;--k:4"><div class="seg-name">합법적으로<br>성장하기</div><div class="seg-bar"></div><div class="seg-time">48–55분</div></div>
+    <div class="seg" style="--c:#a98bff;--k:5"><div class="seg-name">마무리</div><div class="seg-bar"></div><div class="seg-time">55–60분</div></div>
+  </div>
+  <div class="question a"><span class="q-label">오늘의 질문</span><span>해커와 범죄자를 가르는 것은 <b>무엇</b>일까?</span></div>
+</section>
+
+<section class="slide" data-part="1" data-title="강사 소개 · 정해창" data-enter="whoami">
+  <div class="kicker a">Instructor · whoami</div>
+  <h2 class="a">회사를 해킹하고, 월급을 받습니다</h2>
+  <div class="who">
+    <div class="who-term a">
+      <div class="win-bar"><i></i><i></i><i></i><span>hackchang@lecture: ~</span></div>
+      <div class="who-body">
+        <div class="who-ln wq"><span class="ps">$</span><span class="wcmd" data-type="whoami"></span></div>
+        <div class="who-id wq"><span class="who-name">정해창</span><span class="who-role">Red Team Operator</span></div>
+        <div class="who-ln wq"><span class="ps">$</span><span class="wcmd" data-type="cat career.log"></span></div>
+        <div class="jobs wq">
+          <div class="job now">
+            <div class="job-h"><b>LG유플러스</b><span class="role">보안거버넌스팀</span><span class="now-tag">재직중</span><span class="job-t">2026.06 –</span></div>
+            <div class="job-d">자회사 대상 공격자 시뮬레이션 수행</div>
+          </div>
+          <div class="job">
+            <div class="job-h"><b>현대오토에버</b><span class="role">RED팀</span><span class="job-t">2021.08 – 2026.04</span></div>
+            <div class="job-d">국내외 그룹사 레드팀 훈련 (연 11개사) · 웹 · 모바일 · C/S 모의해킹</div>
+          </div>
+        </div>
+        <div class="who-ln wq"><span class="ps">$</span><span class="cursor"></span></div>
+      </div>
+    </div>
+    <div class="who-side">
+      <div class="tr top wq"><i data-icon="flag"></i><div><div class="tr-k">DEF CON 33 CTF Finals</div><div class="tr-v">본선 10위</div><div class="tr-s">Team ColdFusion · 2025</div></div></div>
+      <div class="tr wq"><i data-icon="bug"></i><div><div class="tr-k">취약점 제보</div><div class="tr-v">CVE 29건<span class="sep">·</span>KVE 2건</div><div class="tr-s">2026.11 기준</div></div></div>
+      <div class="tr wq"><i data-icon="trophy"></i><div><div class="tr-k">국내 해킹 · 보안 대회</div><div class="tr-v">수상 8회</div></div></div>
+    </div>
+  </div>
+  <p class="who-foot f">오늘은 <b>‘어떻게 뚫는지’</b>보다, <b class="green">‘어디까지 해도 되는지’</b>를 이야기하러 왔습니다.</p>
+</section>
+
+<section class="slide" data-part="1" data-title="강사 소개 · 조한익" data-enter="whoami">
+  <div class="kicker a">Instructor · whoami</div>
+  <h2 class="a">회사를 해킹하고, 월급을 받습니다</h2>
+  <div class="who">
+    <div class="who-term a">
+      <div class="win-bar"><i></i><i></i><i></i><span>dichotomy@lecture: ~</span></div>
+      <div class="who-body">
+        <div class="who-ln wq"><span class="ps">$</span><span class="wcmd" data-type="whoami"></span></div>
+        <div class="who-id wq"><span class="who-name">조한익</span><span class="who-role">Red Team · Pentester</span></div>
+        <div class="who-ln wq"><span class="ps">$</span><span class="wcmd" data-type="cat career.log"></span></div>
+        <div class="jobs three wq">
+          <div class="job now">
+            <div class="job-h"><b>LG유플러스</b><span class="role">보안거버넌스팀</span><span class="now-tag">재직중</span><span class="job-t">2026.04 –</span></div>
+            <div class="job-d">자회사 대상 공격자 시뮬레이션 수행 · 점검 체계 수립</div>
+          </div>
+          <div class="job">
+            <div class="job-h"><b>현대오토에버</b><span class="role">RED팀</span><span class="job-t">2023.10 – 2026.04</span></div>
+            <div class="job-d">국내외 그룹사 중요 자산 심화 모의해킹 · 웹 · 모바일 · C/S 모의해킹</div>
+          </div>
+          <div class="job">
+            <div class="job-h"><b>이글루코퍼레이션</b><span class="role">보안분석팀</span><span class="job-t">2021.03 – 2023.10</span></div>
+            <div class="job-d">모의해킹 · 신규 취약점 기술분석 · 기술문서 작성</div>
+          </div>
+        </div>
+        <div class="who-ln wq"><span class="ps">$</span><span class="cursor"></span></div>
+      </div>
+    </div>
+    <div class="who-side">
+      <div class="tr top wq"><i data-icon="flag"></i><div><div class="tr-k">DEF CON 33 CTF Finals</div><div class="tr-v">본선 10위</div><div class="tr-s">그 외 해외 유명 해킹대회 본선 진출 2회</div></div></div>
+      <div class="tr wq"><i data-icon="school"></i><div><div class="tr-k">차세대 보안리더 양성 프로그램</div><div class="tr-v">BoB 8기</div><div class="tr-s">보안컨설팅트랙</div></div></div>
+      <div class="tr wq"><i data-icon="trophy"></i><div><div class="tr-k">국내외 해킹 · 보안 대회</div><div class="tr-v">수상 7회</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="1" data-title="WannaCry를 멈춘 청년">
+  <div class="kicker a">2017. 05. 12</div>
+  <h2 class="a">전 세계를 멈춰 세운 랜섬웨어, <span class="red">WannaCry</span></h2>
+  <div class="stats a">
+    <div class="stat"><b><span data-count="150">150</span>+</b><span>개국</span></div>
+    <div class="stat"><b><span data-count="200000" data-format="comma">200,000</span>+</b><span>대 감염</span></div>
+    <div class="stat"><b class="txt">병원 · 공장 · 통신사</b><span>업무 마비</span></div>
+  </div>
+  <div class="wc-grid">
+    <div>
+      <div class="ks f" data-run="killswitch" data-step="1">
+        <div class="ks-label">악성코드 속에서 발견된 이상한 도메인 하나</div>
+        <div class="ks-domain"><span class="typed"></span></div>
+      </div>
+      <div class="ks-steps">
+        <div class="f" data-step="2">22살 보안 연구자가 이 도메인을 <b>직접 등록</b>했다</div>
+        <div class="f" data-step="3">→ 확산이 <b class="green">멈췄다.</b> 악성코드의 ‘킬 스위치’였던 것</div>
+        <div class="f" data-step="4">→ 하루아침에 <b>세계적인 영웅</b>이 되다</div>
+      </div>
+    </div>
+    <div class="price f right" data-step="2">
+      <div class="price-lbl">도메인 등록비</div>
+      <div class="price-usd">$10.69</div>
+      <div class="price-krw">≈ <span data-count="14284" data-format="comma">14,284</span>원</div>
+      <div class="cups kids" aria-hidden="true"><span class="cup"><b></b></span><span class="cup"><b></b></span><span class="cup"><b></b></span></div>
+      <div class="price-cups">스타벅스 아메리카노 <b>약 3잔</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="1" data-title="3개월 뒤">
+  <div class="kicker a">2017. 08 · Las Vegas</div>
+  <h2 class="mega a"><span class="red">3개월</span> 뒤</h2>
+  <p class="lead a">세계 최대 해킹 컨퍼런스 <b class="white">DEF CON</b>에 참석하고 돌아가던 공항에서<br><b class="white">FBI에 체포</b>된다.</p>
+  <div class="d82 a">
+    <div class="d82-node g"><span>2017. 05. 12</span><b>킬 스위치 · 영웅</b></div>
+    <div class="d82-line"><i></i><em>82일</em></div>
+    <div class="d82-node r"><span>2017. 08. 02</span><b>FBI 체포</b></div>
+  </div>
+  <div class="charge a"><span class="charge-tag">혐의</span><span>과거에 만든 뱅킹 악성코드 <b class="mono amber">Kronos</b>의 제작·유포</span></div>
+  <div class="bigq f zoom">이 사람은 <span class="green">화이트햇</span>일까, <span class="red">블랙햇</span>일까?</div>
+  <div class="f small-note">— 답은 강의 마지막에 공개합니다</div>
+</section>
+
+<section class="slide" data-part="1" data-title="열쇠공과 빈집털이범">
+  <h2 class="a" style="text-align:center">열쇠공과 빈집털이범, 무엇이 다를까?</h2>
+  <div class="versus">
+    <div class="vs-col good a"><i data-icon="key"></i><h3>열쇠공</h3></div>
+    <div class="vs-mid a">VS</div>
+    <div class="vs-col bad a"><i data-icon="mask"></i><h3>빈집털이범</h3></div>
+  </div>
+  <div class="vs-row a"><span>같은 도구</span><em>도구</em><span>같은 도구</span></div>
+  <div class="vs-row a"><span>같은 손기술</span><em>기술</em><span>같은 손기술</span></div>
+  <div class="vs-row key f zoom"><span class="green">집주인이 불렀다</span><em>허가</em><span class="red">아무도 안 불렀다</span></div>
+  <p class="punch f">해킹도 똑같다. <b>기술은 같고, 허가가 다르다.</b></p>
+</section>
+
+<section class="slide" data-part="2" data-title="오펜시브 시큐리티란">
+  <div class="kicker a">What is Offensive Security</div>
+  <h2 class="xl a">공격자의 눈으로<br><span class="grad-b">방어를 검증</span>하는 일</h2>
+  <div class="purpose a">목적은 <span class="strike fx">뚫는 것</span><span class="f inl">이 아니라, <b class="green">고치게 만드는 것</b></span></div>
+  <div class="chain f stagger">
+    <span class="pill">공격해 본다</span><span class="arr">→</span>
+    <span class="pill">약점을 찾는다</span><span class="arr">→</span>
+    <span class="pill">보고한다</span><span class="arr">→</span>
+    <span class="pill">고친다</span><span class="arr">→</span>
+    <span class="pill end">더 안전해진다</span>
+  </div>
+</section>
+
+<section class="slide" data-part="2" data-title="오펜시브 시큐리티의 분야">
+  <div class="kicker a">Fields</div>
+  <h2 class="a">공격을 <span class="grad-b">일</span>로 하는 사람들</h2>
+  <div class="fields fx">
+    <div class="field a"><i data-icon="target"></i><h3>모의해킹</h3><div class="en">Penetration Test</div><p>계약한 범위 안에서 취약점을 찾아 보고서로 전달</p><div class="perm"><b>허가</b>고객사와의 계약서</div></div>
+    <div class="field a"><i data-icon="crosshair"></i><h3>레드팀</h3><div class="en">Red Team</div><p>실제 공격자처럼 움직이며 조직의 탐지·대응 능력을 시험</p><div class="perm"><b>허가</b>경영진 승인 + 교전 규칙</div></div>
+    <div class="field a new"><div class="fhead"><i data-icon="chip"></i><span class="newtag">NEW</span></div><h3>AI 레드팀</h3><div class="en">AI Red Team</div><p>AI 서비스를 공격해 보며 잘못된 답·정보 유출 같은 위험을 미리 찾음</p><div class="perm"><b>허가</b>서비스 운영사와의 계약</div></div>
+    <div class="field a"><i data-icon="bug"></i><h3>버그바운티</h3><div class="en">Bug Bounty</div><p>기업이 공개한 범위에서 취약점을 찾아 제보하고 포상</p><div class="perm"><b>허가</b>공개된 프로그램 규칙</div></div>
+    <div class="field a"><i data-icon="search"></i><h3>취약점 연구</h3><div class="en">Vuln Research</div><p>소프트웨어의 새로운 취약점을 발굴해 제조사에 알림</p><div class="perm"><b>허가</b>내 환경 + 책임 있는 공개</div></div>
+    <div class="field a"><i data-icon="flag"></i><h3>CTF · 워게임</h3><div class="en">Capture The Flag</div><p>해킹하라고 만든 문제를 푸는 대회와 연습장</p><div class="perm"><b>허가</b>대회 규칙</div></div>
+  </div>
+  <div class="field-foot f">모든 분야의 공통점 → 시작하기 전에 <b class="green">‘허가’</b>가 있다.</div>
+</section>
+
+<section class="slide" data-part="2" data-title="모의해킹의 진행 과정">
+  <div class="kicker a">Penetration Test Process</div>
+  <h2 class="a">모의해킹은 이렇게 진행된다</h2>
+  <div class="flow fx">
+    <div class="step key a"><div class="step-in"><div class="n">01</div><h4>계약 ·<br>범위 합의</h4><div class="en">Scoping</div></div></div>
+    <div class="step a"><div class="step-in"><div class="n">02</div><h4>정보<br>수집</h4><div class="en">Recon</div></div></div>
+    <div class="step a"><div class="step-in"><div class="n">03</div><h4>스캐닝</h4><div class="en">Scanning</div></div></div>
+    <div class="step a"><div class="step-in"><div class="n">04</div><h4>침투</h4><div class="en">Exploit</div></div></div>
+    <div class="step a"><div class="step-in"><div class="n">05</div><h4>권한<br>상승</h4><div class="en">Post-Exploit</div></div></div>
+    <div class="step key a"><div class="step-in"><div class="n">06</div><h4>보고서</h4><div class="en">Report</div></div></div>
+  </div>
+  <div class="flow-anno f" data-with><div class="k">▲ 여기서 시작</div><div class="mid">영화 속 ‘해킹’은 이 사이의 일부일 뿐</div><div class="k">▲ 여기서 끝</div></div>
+  <p class="flow-foot f">모의해킹 컨설턴트의 최종 결과물은 ‘해킹 성공’이 아니라 <b>보고서</b>다.</p>
+</section>
+
+<section class="slide" data-part="2" data-title="AI가 바꾼 공격과 방어">
+  <div class="kicker a">AI × Security</div>
+  <h2 class="a">AI가 바꾼 공격과 방어</h2>
+  <div class="ai-grid">
+    <div class="ai-col atk f left">
+      <div class="ai-h"><i data-icon="mask"></i>공격자의 손에서</div>
+      <ul>
+        <li><b>어색함 없는 피싱</b><span>맞춤법 틀린 사기 문자는 옛말</span></li>
+        <li><b>목소리 흉내</b><span>가족·상사 목소리를 흉내 낸 보이스피싱</span></li>
+        <li><b>공격 준비 자동화</b><span>정찰과 코드 작성 시간이 크게 줄어듦</span></li>
+      </ul>
+    </div>
+    <div class="ai-col def f right">
+      <div class="ai-h"><i data-icon="shield"></i>방어자의 손에서</div>
+      <ul>
+        <li><b>취약점을 더 빨리</b><span>코드 검토와 점검을 돕는 도구</span></li>
+        <li><b>로그 속 이상 징후</b><span>사람이 다 못 보는 기록을 분석</span></li>
+        <li><b>AI 자체를 지키기</b><span>AI 서비스의 정보 유출·오작동 점검</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ai-rule f zoom">AI는 <b>속도</b>를 바꿨을 뿐, <b class="green">규칙</b>은 그대로다. AI가 했어도 <b>책임은 실행한 사람</b>에게.</div>
+</section>
+
+<section class="slide center" data-part="2" data-title="핵심 메시지">
+  <div class="mega-lines">
+    <div class="a">해커와 범죄자를 가르는 것은</div>
+    <div class="f"><span class="muted">기술</span>이 아니라</div>
+    <div class="f zoom l3 glow-green">허가다.</div>
+  </div>
+</section>
+
+<section class="slide" data-part="3" data-title="데모 환경">
+  <div class="kicker a">Live Demo · Lab Setup</div>
+  <h2 class="a">데모를 시작하기 전에</h2>
+  <div class="env a">
+    <div class="laptop">
+      <div class="lbl"><i data-icon="laptop"></i>MY LAPTOP · 격리된 가상 환경</div>
+      <div class="vms">
+        <div class="vm atk"><i data-icon="terminal"></i><h4>Kali Linux</h4><p>공격자 역할 VM</p></div>
+        <div class="vlink"><span>가상 내부망</span></div>
+        <div class="vm tgt"><i data-icon="server"></i><h4>DVWA</h4><p>일부러 취약하게 만든 웹 서버</p></div>
+      </div>
+    </div>
+    <div class="cut"><i data-icon="xcircle"></i></div>
+    <div class="net"><i data-icon="globe"></i><div>인터넷</div></div>
+  </div>
+  <p class="env-msg a">오늘 보는 모든 공격은 <b class="amber">이 상자 안에서만</b> 일어납니다.</p>
+</section>
+
+<section class="slide" data-part="3" data-title="데모 ① SQL Injection">
+  <div class="kicker a">Demo 01 · SQL Injection</div>
+  <h2 class="a">비밀번호 없이 로그인하기</h2>
+  <div class="sqli">
+    <div class="login card a">
+      <div class="win-bar"><i></i><i></i><i></i><span>192.168.56.10/login · 실습 서버</span></div>
+      <div class="login-body">
+        <label>아이디</label><div class="input sq-id"></div>
+        <label>비밀번호</label><div class="input sq-pw"></div>
+        <div class="btn">로그인</div>
+        <div class="sq-res"></div>
+      </div>
+    </div>
+    <div>
+      <div class="query card a">
+        <div class="q-lbl">서버가 실제로 실행하는 SQL</div>
+        <pre class="code sq-q"><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> id = '<span class="ph">아이디</span>' <span class="kw">AND</span> pw = '<span class="ph">비밀번호</span>'</pre>
+        <div class="sq-anno"></div>
+      </div>
+      <i class="fx" data-run="sqlNormal"></i>
+      <i class="fx" data-run="sqlAttack"></i>
+      <i class="fx" data-run="sqlResult"></i>
+      <div class="lesson f">
+        <div class="lesson-h">교훈: 입력값을 <b>코드</b>로 실행하게 두지 마라</div>
+        <div class="lesson-b">방어: <b class="white">매개변수화 쿼리</b>(Prepared Statement) · 입력값 검증 · 최소 권한 DB 계정</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="3" data-title="데모 ② 비밀번호 크래킹">
+  <div class="kicker a">Demo 02 · Password Cracking</div>
+  <h2 class="a">내 비밀번호는 몇 초나 버틸까?</h2>
+  <div class="pw-grid">
+    <div class="term a">
+      <div class="win-bar"><i></i><i></i><i></i><span>kali@lab: ~ (예시 화면)</span></div>
+      <pre class="term-body"><span class="ps">$</span> <span class="cursor"></span></pre>
+    </div>
+    <div class="pw-side">
+      <i class="fx" data-run="terminal"></i>
+      <div class="f">
+        <div class="bigstat">1<small>초</small></div>
+        <div class="bigstat-sub">6개 중 <span class="red">5개</span> 해독</div>
+      </div>
+      <div class="f combo">
+        <div class="combo-h">경우의 수로 보면</div>
+        <div class="combo-row"><div class="combo-t"><span>유출 비밀번호 목록</span><b>약 1,400만 개</b></div><div class="cbar"><i style="--w:6px"></i></div></div>
+        <div class="combo-row"><div class="combo-t"><span>무작위 단어 4개 문장형</span><b>약 3,656조 가지</b></div><div class="cbar long"><i style="--w:100%"></i></div></div>
+        <div class="combo-note">7,776개 단어 중 4개 기준 · 목록의 약 <b>2.5억 배</b> (실제 비율이면 위 막대는 보이지도 않음)</div>
+      </div>
+      <div class="f tips">
+        <div class="tips-h">좋은 비밀번호는</div>
+        <ul>
+          <li><b>길게</b>: 15자 이상 권장</li>
+          <li>단어를 이은 <b>문장형</b></li>
+          <li>사이트마다 다르게 → <b>비밀번호 관리자</b></li>
+          <li><b>2단계 인증</b>(MFA) 켜기</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide center spot" data-part="3" data-title="그런데">
+  <div class="drama">
+    <div class="d1 a">지금 이건 <b class="white">제 노트북 안의 가상 서버</b>라서 합법입니다.</div>
+    <div class="d2 f">똑같은 걸 <b class="white">학교 포털</b>에 입력하는 순간,</div>
+    <div class="d3 f zoom"><span class="glitch" data-text="형사처벌 대상입니다.">형사처벌 대상입니다.</span></div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="정보통신망법 제48조">
+  <div class="kicker a">Law · 오늘 가장 중요한 한 문장</div>
+  <blockquote class="law a">
+    <span class="src">정보통신망법 제48조 제1항</span>
+    누구든지 <mark class="hl fx" data-step="1">정당한 접근권한 없이</mark> 또는 <mark class="hl redhl fx" data-step="2">허용된 접근권한을 넘어</mark> 정보통신망에 침입하여서는 아니 된다.
+  </blockquote>
+  <div class="law-ex">
+    <div class="ex amb f" data-step="1"><span class="tag">접근권한 없이</span>남의 계정·서버에 허락 없이 들어가기</div>
+    <div class="ex rd f" data-step="2"><span class="tag">허용된 범위를 넘어</span>내 계정으로 로그인한 뒤, URL을 바꿔 남의 정보 보기</div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="처벌 수위">
+  <div class="kicker a">Penalty</div>
+  <h2 class="a">‘해봤을 뿐’의 대가</h2>
+  <div class="pen">
+    <div class="pcard f">
+      <h4>허가 없이·범위를 넘어<br>시스템에 접근</h4>
+      <div class="ref">정보통신망법 §48① · §71</div>
+      <div class="pre"></div>
+      <div class="num"><span data-count="5">5</span><small>년</small></div>
+      <div class="unit">이하 징역</div>
+      <div class="ybar"><i style="--w:50%"></i></div>
+      <span class="ptag">미수도 처벌</span>
+      <div class="fine">또는 5,000만 원 이하 벌금</div>
+    </div>
+    <div class="pcard f">
+      <h4>악성코드를<br>만들어 퍼뜨리기</h4>
+      <div class="ref">정보통신망법 §48② · §70의2</div>
+      <div class="pre"></div>
+      <div class="num"><span data-count="7">7</span><small>년</small></div>
+      <div class="unit">이하 징역</div>
+      <div class="ybar"><i style="--w:70%"></i></div>
+      <div class="fine">또는 7,000만 원 이하 벌금</div>
+    </div>
+    <div class="pcard f">
+      <h4>서비스 장애 유발<br>(DoS 등)</h4>
+      <div class="ref">정보통신망법 §48③ · §71<br>형법 §314② 컴퓨터등 업무방해</div>
+      <div class="pre"></div>
+      <div class="num"><span data-count="5">5</span><small>년</small></div>
+      <div class="unit">이하 징역</div>
+      <div class="ybar"><i style="--w:50%"></i></div>
+      <div class="fine">또는 5,000만 원 이하 벌금</div>
+    </div>
+    <div class="pcard alert f">
+      <h4>남의 통신 엿보기<br>(패킷 스니핑)</h4>
+      <div class="ref">통신비밀보호법 §3 · §16</div>
+      <div class="pre">1년 이상</div>
+      <div class="num"><span data-count="10">10</span><small>년</small></div>
+      <div class="unit">이하 징역</div>
+      <div class="ybar"><i style="--y0:10%;--w:100%"></i></div>
+      <span class="ptag">벌금형 없음</span>
+      <div class="fine">+ 5년 이하 자격정지</div>
+    </div>
+  </div>
+  <div class="foot a">※ 법정형(법에 정해진 최대 형량) 기준 · 막대 길이 = 최대 징역(10년 기준) · 출처: 국가법령정보센터 law.go.kr</div>
+</section>
+
+<section class="slide center" data-part="4" data-title="통하지 않는 변명">
+  <div class="kicker a">Excuses</div>
+  <h2 class="a">이런 말은 통하지 않습니다</h2>
+  <div class="bubbles fx kids">
+    <div class="bub a">“호기심이었어요”</div>
+    <div class="bub a">“신고하려고 했어요”</div>
+    <div class="bub a">“피해는 없었잖아요”</div>
+    <div class="bub a">“스캔만 했는데요”</div>
+    <div class="bub a">“AI가 짜준 코드인데요”</div>
+    <div class="bub a">“보안이 허술한 게 잘못이죠”</div>
+    <div class="bub a">“다들 하던데요”</div>
+  </div>
+  <p class="f conclude">동기가 선해도, <b>허가 없는 접근</b>은 그 자체로 <b class="red">범죄</b>가 될 수 있다.</p>
+</section>
+
+<section class="slide" data-part="4" data-title="CASE 1 · 학번 바꿔보기" data-answer="불법">
+  <div class="kicker a">Case 1 / 6 · 합법일까, 불법일까?</div>
+  <div class="case">
+    <div>
+      <div class="scen a"><i data-icon="school"></i><p>학교 포털에서 성적을 보다가 URL 끝의 내 학번을 다른 숫자로 바꿔봤다. 다른 학생의 성적이 보였다. 더 보지 않고 바로 학교에 알렸다.</p></div>
+      <div class="votes a"><button class="chip" data-v="합법" data-tone="green">합법</button><button class="chip" data-v="애매" data-tone="amber">애매</button><button class="chip" data-v="불법" data-tone="red">불법</button></div>
+    </div>
+    <div class="verdict v-red f right" data-run="verdict">
+      <div class="badge">불법이 될 수 있다</div>
+      <ul>
+        <li>내 계정이라도 <b>허용된 범위를 넘어</b> 남의 정보를 본 것 → 침입·비밀 침해 소지</li>
+        <li>선의였다는 이유만으로 <b>면책되지 않는다</b></li>
+        <li>‘애매하다’는 건 <b>하지 말라는 신호</b></li>
+      </ul>
+    </div>
+    <div class="dd f">
+      <h5>그다음 행동이 운명을 가른다</h5>
+      <div class="dd-row"><span class="do">✓ 즉시 멈춘다</span><span class="do">✓ 저장·캡처·공유하지 않는다</span><span class="do">✓ 공식 창구로 알린다</span><span class="dont">✕ 친구에게 자랑 · SNS 업로드</span><span class="dont">✕ “몇 개만 더 볼까?”</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="CASE 2 · 친구의 부탁" data-answer="불법">
+  <div class="kicker a">Case 2 / 6 · 합법일까, 불법일까?</div>
+  <div class="case">
+    <div>
+      <div class="scen a"><i data-icon="users"></i><p>친구가 “인스타 비밀번호를 까먹었어, 네가 좀 뚫어줘”라며 허락했다. 비밀번호 대입 도구로 친구 계정 로그인을 시도했다.</p></div>
+      <div class="votes a"><button class="chip" data-v="합법" data-tone="green">합법</button><button class="chip" data-v="애매" data-tone="amber">애매</button><button class="chip" data-v="불법" data-tone="red">불법</button></div>
+    </div>
+    <div class="verdict v-red f right" data-run="verdict">
+      <div class="badge">불법</div>
+      <ul>
+        <li>친구는 계정의 주인이지만, <b>서버의 주인은 아니다</b></li>
+        <li>허락할 권한은 시스템 소유자(Meta)에게 있다 → 남의 서버에 대한 <b>무단 접근 시도</b></li>
+        <li>정답은 공식 <b>계정 복구 절차</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="CASE 3 · 카페 와이파이" data-answer="불법">
+  <div class="kicker a">Case 3 / 6 · 합법일까, 불법일까?</div>
+  <div class="case">
+    <div>
+      <div class="scen a"><i data-icon="wifi"></i><p>수업에서 배운 Wireshark를 연습하려고 카페 공용 와이파이에서 패킷을 캡처했다. 다른 손님들이 주고받는 데이터가 보였다.</p></div>
+      <div class="votes a"><button class="chip" data-v="합법" data-tone="green">합법</button><button class="chip" data-v="애매" data-tone="amber">애매</button><button class="chip" data-v="불법" data-tone="red">불법</button></div>
+    </div>
+    <div class="verdict v-red f right" data-run="verdict">
+      <div class="badge">불법</div>
+      <ul>
+        <li>남의 통신 내용을 동의 없이 엿보는 것 = <b>감청</b></li>
+        <li><b>1년 이상 10년 이하 징역</b><br>(통신비밀보호법, 벌금형 없음)</li>
+        <li>연습은 <b>내 네트워크, 내 트래픽</b>으로</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="CASE 4 · AI가 만든 스캐너" data-answer="불법">
+  <div class="kicker a">Case 4 / 6 · 합법일까, 불법일까?</div>
+  <div class="case">
+    <div>
+      <div class="scen a"><i data-icon="radar"></i><p>AI에게 부탁해 만든 자동 취약점 스캐너로 유명 쇼핑몰 사이트를 ‘스캔만’ 했다. 데이터는 하나도 건드리지 않았다.</p></div>
+      <div class="votes a"><button class="chip" data-v="합법" data-tone="green">합법</button><button class="chip" data-v="애매" data-tone="amber">애매</button><button class="chip" data-v="불법" data-tone="red">불법</button></div>
+    </div>
+    <div class="verdict v-red f right" data-run="verdict">
+      <div class="badge">불법이 될 수 있다</div>
+      <ul>
+        <li>취약점 스캐너는 <b>실제 공격 문자열</b>을 수천 번 보낸다</li>
+        <li><b>침입 미수</b>·<b>업무방해</b>로 처벌될 수 있다</li>
+        <li>AI가 만들어 줬어도 <b>실행한 사람이 책임진다</b></li>
+        <li>원칙: 남의 시스템은 <b>스캔도 허가받고</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="CASE 5 · 버그바운티" data-answer="합법">
+  <div class="kicker a">Case 5 / 6 · 합법일까, 불법일까?</div>
+  <div class="case">
+    <div>
+      <div class="scen a"><i data-icon="bug"></i><p>A기업 버그바운티 공고의 ‘대상 범위’에 적힌 도메인에서 취약점을 찾았다. 공고에 적힌 규칙대로 신고했다.</p></div>
+      <div class="votes a"><button class="chip" data-v="합법" data-tone="green">합법</button><button class="chip" data-v="애매" data-tone="amber">애매</button><button class="chip" data-v="불법" data-tone="red">불법</button></div>
+    </div>
+    <div class="verdict v-green f right" data-run="verdict">
+      <div class="badge">합법</div>
+      <ul>
+        <li>기업이 공개적으로 준 <b>허가</b> + 정해진 <b>규칙</b> = 허가된 테스트</li>
+        <li>포상금, 경력, 명예의 전당까지</li>
+        <li>이게 바로 <b>정답 루트</b></li>
+      </ul>
+    </div>
+    <div class="twist f"><i data-icon="alert"></i><div>그런데 그 도메인이 공고 범위에 <b>없었다면?</b> → 허가 범위 밖 = 무단 접근. <b class="red">발견했어도 더 진행하지 않는다.</b></div></div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="CASE 6 · 허가받은 침투" data-answer="체포됨">
+  <div class="kicker a">Case 6 / 6 · 실제 있었던 일</div>
+  <div class="case">
+    <div>
+      <div class="scen a"><i data-icon="building"></i><p>보안업체 직원 2명이 정식 계약을 맺고 법원 건물 침투 테스트를 하던 중 경보가 울렸다. 출동한 보안관에게 계약서를 보여줬다. 이들은 체포됐을까?</p></div>
+      <div class="votes a"><button class="chip" data-v="체포 안 됨" data-tone="green">체포 안 됨</button><button class="chip" data-v="체포됨" data-tone="red">체포됨</button></div>
+    </div>
+    <div class="verdict v-red f right" data-run="verdict">
+      <div class="badge">체포됐다 (2019, 미국 아이오와)</div>
+      <ul>
+        <li>계약한 곳은 주(州) 법원행정처, 건물 관리는 카운티 → <b>누가 허가할 권한이 있는지</b>가 엇갈림</li>
+        <li>구금·기소된 뒤 몇 달 만에 기소 취하</li>
+        <li>허가서는 <b>‘누가’ 승인했는지</b>까지 확인해야 한다</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="화이트햇의 4원칙">
+  <div class="kicker a">Principles</div>
+  <h2 class="a">화이트햇의 4원칙</h2>
+  <div class="prin">
+    <div class="pr a"><div class="num">1</div><i data-icon="doc"></i><h3>허가</h3><div class="en">Authorization</div><p><b>권한 있는 사람</b>에게, <b>문서로</b> 받는다</p></div>
+    <div class="pr a"><div class="num">2</div><i data-icon="scope"></i><h3>범위</h3><div class="en">Scope</div><p>합의한 <b>대상·방법·기간</b> 밖은 건드리지 않는다</p></div>
+    <div class="pr a"><div class="num">3</div><i data-icon="eyeoff"></i><h3>최소 침해</h3><div class="en">Minimal Impact</div><p>필요 이상으로 <b>보지도, 가져가지도, 멈추게 하지도</b> 않는다</p></div>
+    <div class="pr a"><div class="num">4</div><i data-icon="megaphone"></i><h3>책임 있는 공개</h3><div class="en">Responsible Disclosure</div><p>고칠 <b>시간을 주고</b>, <b>공식 창구</b>로 알린다</p></div>
+  </div>
+</section>
+
+<section class="slide" data-part="4" data-title="취약점을 발견했다면">
+  <div class="kicker a">Responsible Disclosure</div>
+  <h2 class="a">우연히 취약점을 발견했다면</h2>
+  <div class="disc">
+    <div class="dstep a"><i data-icon="stop"></i><h4>멈춘다</h4><p>더 들어가지 않는다</p></div>
+    <div class="darrow a">→</div>
+    <div class="dstep a"><i data-icon="pencil"></i><h4>기록한다</h4><p>언제, 무엇을 했는지</p></div>
+    <div class="darrow a">→</div>
+    <div class="dstep a"><i data-icon="send"></i><h4>알린다</h4><p>공식 창구로 신고</p></div>
+    <div class="darrow a">→</div>
+    <div class="dstep a"><i data-icon="clock"></i><h4>기다린다</h4><p>고쳐질 때까지 비밀 유지</p></div>
+    <div class="darrow a">→</div>
+    <div class="dstep a"><i data-icon="megaphone"></i><h4>공개한다</h4><p>허락받은 뒤에만</p></div>
+  </div>
+  <div class="channels">
+    <div class="chbox f"><h5>신고 창구</h5><div class="tags"><span>해당 기관·기업 보안 담당</span><span>버그바운티 프로그램</span><span>KISA 취약점 신고포상제</span></div></div>
+    <div class="chbox no f" data-with><h5>절대 금지</h5><div class="tags"><span>SNS·커뮤니티에 공개</span><span>데이터 내려받기</span><span>‘증명’하려고 더 침투</span><span>신고 대가로 금전 요구</span></div></div>
+  </div>
+</section>
+
+<section class="slide" data-part="5" data-title="합법적인 놀이터">
+  <div class="kicker a">Legal Playgrounds</div>
+  <h2 class="a">마음껏 해킹해도 되는 곳은 충분하다</h2>
+  <div class="plat">
+    <div class="pl star a"><div class="top"><h4>DreamHack</h4><span class="lv easy">입문 · 추천</span></div><p>국내 플랫폼. 한국어 강의와 워게임을 함께 제공</p><div class="url">dreamhack.io</div></div>
+    <div class="pl a"><div class="top"><h4>PortSwigger Academy</h4><span class="lv easy">입문~중급</span></div><p>무료로 배우는 웹 해킹 교과서와 실습 랩</p><div class="url">portswigger.net/web-security</div></div>
+    <div class="pl a"><div class="top"><h4>Gandalf</h4><span class="lv easy">입문 · AI</span></div><p>AI 챗봇을 말로 속여 비밀번호를 알아내는 프롬프트 인젝션 연습 게임</p><div class="url">gandalf.lakera.ai</div></div>
+    <div class="pl a"><div class="top"><h4>picoCTF</h4><span class="lv easy">입문</span></div><p>입문자용 CTF</p><div class="url">picoctf.org</div></div>
+    <div class="pl a"><div class="top"><h4>webhacking.kr · pwnable.kr</h4><span class="lv mid">입문~중급</span></div><p>국내 대표 워게임 사이트</p><div class="url">webhacking.kr · pwnable.kr</div></div>
+    <div class="pl a"><div class="top"><h4>Hack The Box</h4><span class="lv mid">중급</span></div><p>실전형 머신 공략. 실력이 붙은 다음 단계로</p><div class="url">hackthebox.com</div></div>
+  </div>
+</section>
+
+<section class="slide" data-part="5" data-title="실력을 키우는 길">
+  <div class="kicker a">Grow</div>
+  <h2 class="a">합법적으로 실력을 키우는 길</h2>
+  <div class="grow">
+    <div class="gcol a"><i data-icon="laptop"></i><h3>나만의 실습실</h3><ul><li>VirtualBox · VMware</li><li>Kali Linux</li><li>DVWA · Metasploitable · OWASP Juice Shop</li></ul><p class="gnote">내 컴퓨터 안이라면 <b>마음껏 부숴도</b> 된다</p></div>
+    <div class="gcol a"><i data-icon="trophy"></i><h3>대회 · 교육</h3><ul><li>교내 보안 동아리 · CTF</li><li>CCE · 코드게이트 · 화이트햇 콘테스트</li><li>BoB · 화이트햇 스쿨</li></ul><p class="gnote">팀으로 배우면 <b>훨씬 빠르다</b></p></div>
+    <div class="gcol a"><i data-icon="shield"></i><h3>찾았다면 신고 · 포상</h3><ul><li>기업 버그바운티 (HackerOne · Bugcrowd)</li><li>KISA 취약점 신고포상제</li><li>CVE 등록</li></ul><p class="gnote">포상금보다 값진 <b>이력서 한 줄</b></p></div>
+  </div>
+</section>
+
+<section class="slide center" data-part="5" data-title="입문 로드맵">
+  <div class="kicker a">Roadmap for Beginners</div>
+  <h2 class="a">지금 해야 할 것</h2>
+  <div class="pyr">
+    <div class="layer l3 f"><span class="here">시작은 여기!</span><h4>기초 체력</h4><p>네트워크 · 운영체제 · 프로그래밍(C, Python) · 웹 동작 원리 · AI 활용</p></div>
+    <div class="layer l2 f"><h4>응용</h4><p>리눅스 다루기 · 암호 기초 · 워게임 · CTF</p></div>
+    <div class="layer l1 f"><h4>도구</h4><p>Katana · Burp Suite · Subfinder · FFUF · LLM 등</p></div>
+  </div>
+  <p class="f conclude">도구를 <b>쓰는</b> 사람이 아니라, 도구가 <b class="green">왜 동작하는지 아는</b> 사람이 되자.<span class="conclude-sub">AI가 답을 줄수록, 그 답이 맞는지 판단할 <b>기초</b>가 더 중요해진다.</span></p>
+</section>
+
+<section class="slide" data-part="6" data-title="그래서, 그는?">
+  <div class="kicker a">Opening Question</div>
+  <h2 class="a">그래서, 그는 화이트햇이었을까?</h2>
+  <div class="tl">
+    <div class="tl-item a" style="--c:var(--red)"><div class="when">과거</div><h4>악성코드 제작</h4><p>뱅킹 악성코드 Kronos 제작에 관여</p></div>
+    <div class="tl-item a" style="--c:var(--green)"><div class="when">2017. 05</div><h4>WannaCry를 멈추다</h4><p>킬 스위치를 찾아내 세계적인 영웅이 되다</p></div>
+    <div class="tl-item a" style="--c:var(--amber)"><div class="when">2017. 08 → 2019</div><h4>체포, 유죄 인정</h4><p>판사는 공로를 참작해 추가 구금 없이 보호관찰 1년을 선고</p></div>
+    <div class="tl-item a" style="--c:var(--blue)"><div class="when">현재</div><h4>보안 연구자 · 교육자</h4><p>악성코드 분석가로 활동하며 경험을 공유</p></div>
+  </div>
+  <div class="answer f">답: <span class="amber">둘 다</span>였다.</div>
+  <div class="answer-sub f">기술은 영웅도, 범죄자도 만든다. <span class="muted">그리고 과거의 선택은 언젠가 반드시 따라온다.</span></div>
+</section>
+
+<section class="slide" data-part="6" data-title="행동 전 3가지 질문">
+  <div class="kicker a">Before You Hack</div>
+  <h2 class="a">행동하기 전, 스스로에게 3가지 질문</h2>
+  <div class="qs">
+    <div class="qrow a"><div class="qn">1</div><div><h3>허락을 받았나?</h3><p>권한 있는 사람에게, 문서로</p></div></div>
+    <div class="qrow a"><div class="qn">2</div><div><h3>범위 안인가?</h3><p>합의한 대상 · 방법 · 기간 안에서</p></div></div>
+    <div class="qrow a"><div class="qn">3</div><div><h3>아무도 피해를 보지 않는가?</h3><p>서비스 장애도, 정보 노출도 없이</p></div></div>
+  </div>
+  <div class="stoprule f"><i data-icon="stop"></i><div>하나라도 <span class="red">‘아니오’</span> 또는 <span class="amber">‘모르겠다’</span>면 → <b>멈춘다.</b></div></div>
+</section>
+
+<section class="slide center" data-part="6" data-title="화이트햇 서약">
+  <div class="kicker a">Pledge</div>
+  <div class="pledge a">
+    <h3>화이트햇 서약</h3>
+    <ol>
+      <li>나는 허가받지 않은 시스템에 접근하지 않는다.</li>
+      <li>나는 허가받은 범위를 넘지 않는다.</li>
+      <li>나는 알게 된 정보를 악용하거나 퍼뜨리지 않는다.</li>
+      <li>나는 발견한 취약점을 책임 있게 알린다.</li>
+      <li>나는 배운 기술을 사람과 시스템을 지키는 데 쓴다.</li>
+    </ol>
+    <div class="sign"><div>날짜 <span></span></div><div>이름 <span></span></div></div>
+  </div>
+</section>
+
+<section class="slide center s-end" data-part="6" data-title="Q&amp;A">
+  <canvas class="rain" width="1920" height="1080"></canvas>
+  <div class="end-wrap">
+    <div class="qa a">Q<span class="amp">&amp;</span>A</div>
+    <div class="end-sub a">감사합니다</div>
+    <div class="end-mono a"><span class="green">$</span> echo "Hack responsibly."<span class="cursor"></span></div>
+  </div>
+</section>
+
+</main>
+
+<div id="hud">
+  <div id="hud-chip"></div>
+  <div id="hud-count"><span class="pips" id="hud-pips"></span><span id="hud-num"></span></div>
+  <div id="hud-nav"><button id="nav-prev" aria-label="이전">◀</button><button id="nav-next" aria-label="다음">▶</button></div>
+  <div id="hud-progress"><div id="hud-bar"></div></div>
+</div>
+<div id="menu" class="overlay"><div class="panel"><div class="panel-h">슬라이드 목록 <span>G · Esc 닫기</span></div><div id="menu-list"></div></div></div>
+<div id="help" class="overlay"><div class="panel small">
+  <div class="panel-h">단축키 <span>? · Esc 닫기</span></div>
+  <table class="keys-t">
+    <tr><td><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></td><td>다음 (단계별 내용 → 다음 슬라이드)</td></tr>
+    <tr><td><kbd>←</kbd> <kbd>PgUp</kbd></td><td>이전</td></tr>
+    <tr><td><kbd>F</kbd> / <kbd>F5</kbd></td><td>전체화면</td></tr>
+    <tr><td><kbd>G</kbd></td><td>슬라이드 목록으로 이동</td></tr>
+    <tr><td><kbd>B</kbd> / <kbd>.</kbd></td><td>화면 가리기</td></tr>
+    <tr><td><kbd>Home</kbd> <kbd>End</kbd></td><td>처음 / 끝</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>P</kbd></td><td>PDF로 저장 (모든 단계가 펼쳐진 상태)</td></tr>
+  </table>
+</div></div>
+<div id="black"></div>
+<div id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const PARTS = {
+  1: { name: '오프닝' },
+  2: { name: '오펜시브 시큐리티란' },
+  3: { name: '라이브 데모' },
+  4: { name: '윤리와 법' },
+  5: { name: '합법적으로 성장하기' },
+  6: { name: '마무리' }
+};
+
+const ICONS = {
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+  crosshair: '<circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>',
+  bug: '<path d="M8 10a4 4 0 0 1 8 0v4a4 4 0 0 1-8 0z"/><path d="M12 10v8M4 12h4M16 12h4M5 7l3 2M19 7l-3 2M5 18l3-2M19 18l-3-2M10 6 9 3.5M14 6l1-2.5"/>',
+  search: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
+  flag: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+  key: '<circle cx="7.5" cy="15.5" r="4"/><path d="m10.5 12.5 9-9M16 7l2.5 2.5M13.5 9.5 16 12"/>',
+  mask: '<path d="M2.5 10c0-2.2 2.2-3.5 4.8-3.5 2.2 0 3.6 1.2 4.7 2.2 1.1-1 2.5-2.2 4.7-2.2 2.6 0 4.8 1.3 4.8 3.5 0 3.2-2.3 5.5-5 5.5-2 0-3.2-1.3-4.5-1.3S9.6 15.5 7.5 15.5c-2.7 0-5-2.3-5-5.5z"/><path d="M6.5 10.5h2M15.5 10.5h2"/>',
+  doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/>',
+  scope: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff: '<path d="M3 3l18 18"/><path d="M10.6 6.2A9.6 9.6 0 0 1 12 6c5 0 9 6 9 6a15.5 15.5 0 0 1-2.9 3.4M6.5 6.6C4.2 8.1 3 12 3 12s4 6 9 6c1.5 0 2.9-.4 4.1-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  megaphone: '<path d="M3 10v4h3l9 5V5L6 10z"/><path d="M18.5 9a4 4 0 0 1 0 6"/>',
+  laptop: '<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3.2 2.8 14.8 0 18M12 3c-2.8 3.2-2.8 14.8 0 18"/>',
+  stop: '<path d="M8.2 3h7.6L21 8.2v7.6L15.8 21H8.2L3 15.8V8.2z"/><path d="M8.5 12h7"/>',
+  pencil: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/>',
+  send: '<path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="m10 13 4-4"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+  terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/>',
+  trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M9.5 17h5"/>',
+  shield: '<path d="M12 3 20 6v6c0 5-3.4 8-8 9-4.6-1-8-4-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+  wifi: '<path d="M2 8.8a15 15 0 0 1 20 0M5 12.3a10 10 0 0 1 14 0M8.5 15.8a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r=".8"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.7-3.6 3.4-5.5 6.5-5.5s5.8 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.8 3.1 2.5 3.5 5.2"/>',
+  school: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v6"/>',
+  radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12 18 6"/><circle cx="12" cy="12" r="1"/>',
+  building: '<path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="M9 21v-5h6v5M9 12h.01M15 12h.01"/>',
+  server: '<rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M8 7.5h.01M8 16.5h.01"/>',
+  alert: '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>',
+  xcircle: '<circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/>',
+  chip: '<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>'
+};
+
+const stage = $('#stage');
+const slides = $$('.slide', stage);
+
+$$('i[data-icon]').forEach(el => {
+  const p = ICONS[el.dataset.icon];
+  if (!p) return;
+  el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+  el.classList.add('ic');
+});
+$$('.kids, .stagger').forEach(p => [...p.children].forEach((c, k) => c.style.setProperty('--k', k)));
+const KO_RE = /[가-힣]+(?:[\s,?!·]+[가-힣]+)*[?!]?/g;
+const escTxt = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const koWrap = str => escTxt(str).replace(KO_RE, m => `<span class="ko">${m}</span>`);
+$$('.kicker, .q-label, .vs-row em, .perm b, .ex .tag, .chbox h5, .tips-h, .q-lbl, .tl-item .when, .laptop .lbl, .law .src, .win-bar span').forEach(root => {
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n => {
+    if (!/[가-힣]/.test(n.nodeValue)) return;
+    const tmp = document.createElement('span');
+    tmp.innerHTML = koWrap(n.nodeValue);
+    n.replaceWith(...tmp.childNodes);
+  });
+});
+slides.forEach(s => $$('.a', s).forEach((el, k) => el.style.setProperty('--i', k)));
+const originals = slides.map(s => s.innerHTML);
+
+function groupsOf(s) {
+  const els = $$('.f, .fx', s);
+  if (els.some(e => e.hasAttribute('data-step'))) {
+    const m = new Map();
+    els.forEach(e => {
+      const k = +e.dataset.step || 0;
+      if (!m.has(k)) m.set(k, []);
+      m.get(k).push(e);
+    });
+    return [...m.keys()].sort((a, b) => a - b).map(k => m.get(k));
+  }
+  const g = [];
+  els.forEach(e => {
+    if (e.hasAttribute('data-with') && g.length) g[g.length - 1].push(e);
+    else g.push([e]);
+  });
+  return g;
+}
+const fragCount = slides.map(s => groupsOf(s).length);
+const dynamic = slides.map(s => !!s.querySelector('[data-run],[data-count]') || s.hasAttribute('data-enter'));
+
+let gen = 0;
+const noop = () => {};
+const sleep = ms => new Promise((res, rej) => { const g = gen; setTimeout(() => (g === gen ? res() : rej(0)), ms); });
+const run = fn => { fn().catch(noop); };
+async function type(el, text, speed = 45, onStep) {
+  const chars = [...text];
+  el.classList.add('caret');
+  for (let k = 1; k <= chars.length; k++) {
+    const v = chars.slice(0, k).join('');
+    el.textContent = v;
+    if (onStep) onStep(v);
+    await sleep(speed * (0.6 + Math.random() * 0.8));
+  }
+  el.classList.remove('caret');
+}
+function countUp(el, instant, delay = 0) {
+  const to = parseFloat(el.dataset.count);
+  const comma = el.dataset.format === 'comma';
+  const show = v => { el.textContent = comma ? Math.round(v).toLocaleString('en-US') : String(Math.round(v)); };
+  if (instant || reduced) { show(to); return; }
+  show(0);
+  const g = gen, dur = +el.dataset.dur || 1300;
+  setTimeout(() => {
+    if (g !== gen) return;
+    const t0 = performance.now();
+    const tick = now => {
+      if (g !== gen) return;
+      const p = Math.min(1, (now - t0) / dur);
+      show(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, delay);
+}
+
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const KW = w => `<span class="kw">${w}</span>`;
+const qNormal = (id, pw) => `${KW('SELECT')} * ${KW('FROM')} users\n${KW('WHERE')} id = '<span class="val">${esc(id)}</span>' ${KW('AND')} pw = '<span class="val">${esc(pw)}</span>'`;
+const qRaw = (id, pw) => `${KW('SELECT')} * ${KW('FROM')} users\n${KW('WHERE')} id = '<span class="inj">${esc(id)}</span>' ${KW('AND')} pw = '<span class="val">${esc(pw)}</span>'`;
+const qAttack = `${KW('SELECT')} * ${KW('FROM')} users\n${KW('WHERE')} id = '<span class="inj">' ${KW('OR')} <span class="tru">'1'='1'</span> --</span><span class="cmt"> ' AND pw = '아무거나'</span>`;
+const ATK = "' OR '1'='1' -- ";
+const ANNO_N = `<div class="anno ok" style="--k:0"><i></i><span>입력값이 <b>데이터</b>로만 쓰인다 → 아이디·비밀번호가 모두 맞아야 로그인</span></div>`;
+const ANNO_A = [
+  `<div class="anno inj" style="--k:0"><i></i><span>입력한 값이 <b>SQL 코드의 일부</b>가 되어버렸다</span></div>`,
+  `<div class="anno tru" style="--k:1"><i></i><span><code>'1'='1'</code> 은 항상 참 → 조건이 무조건 통과</span></div>`,
+  `<div class="anno cmt" style="--k:2"><i></i><span><code>--</code> 뒤는 주석 → <b>비밀번호 검사가 사라짐</b></span></div>`
+].join('');
+const sq = el => {
+  const s = el.closest('.slide');
+  return { id: $('.sq-id', s), pw: $('.sq-pw', s), q: $('.sq-q', s), anno: $('.sq-anno', s), res: $('.sq-res', s), card: $('.login', s) };
+};
+
+const TERM_CMD = 'john --format=raw-md5 --wordlist=rockyou.txt hashes.txt';
+const hit = (p, u) => `<span class="pw">${p.padEnd(17)}</span><span class="dm">(${u})</span>`;
+const TERM_OUT = [
+  `<span class="dm">Loaded 6 password hashes (Raw-MD5 [MD5 256/256 AVX2 8x3])</span>`,
+  `<span class="dm">Press 'q' or Ctrl-C to abort, almost any other key for status</span>`,
+  hit('password123', 'student01'),
+  hit('qwer1234!', 'student02'),
+  hit('iloveyou', 'student03'),
+  hit('1q2w3e4r!', 'student04'),
+  hit('asdf1234', 'student05'),
+  `<span class="done">5g 0:00:00:01 DONE</span> <span class="dm">(6개 중 5개 해독)</span>`,
+  `<span class="dm">Session completed.</span>`
+];
+const PS = '<span class="ps">$</span> ';
+
+const HOOKS = {
+  titleType(s, instant) {
+    const el = $('.tcmd', s);
+    if (!el) return;
+    const txt = el.dataset.type;
+    if (instant) { el.textContent = txt; return; }
+    run(async () => { await sleep(1500); await type(el, txt, 70); });
+  },
+  whoami(s, instant) {
+    const seq = $$('.wq', s);
+    const showAll = () => seq.forEach(el => {
+      el.style.transition = 'none';
+      el.classList.add('on');
+      const c = $('.wcmd', el);
+      if (c) c.textContent = c.dataset.type;
+    });
+    if (instant || reduced) { showAll(); return; }
+    run(async () => {
+      await sleep(650);
+      for (const el of seq) {
+        el.classList.add('on');
+        const c = $('.wcmd', el);
+        if (c) { await sleep(120); await type(c, c.dataset.type, 60); await sleep(260); }
+        else await sleep(420);
+      }
+    });
+  },
+  killswitch(el, instant) {
+    const t = $('.typed', el);
+    const d = 'iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com';
+    if (instant) { t.textContent = d; return; }
+    run(async () => { await sleep(350); await type(t, d, 26); });
+  },
+  sqlNormal(el, instant) {
+    const r = sq(el);
+    if (instant) {
+      r.id.textContent = 'student01'; r.pw.textContent = '••••••••';
+      r.q.innerHTML = qNormal('student01', '••••••••');
+      r.anno.innerHTML = ANNO_N; r.anno.classList.add('noanim');
+      return;
+    }
+    r.anno.classList.remove('noanim');
+    run(async () => {
+      r.q.innerHTML = qNormal('', '');
+      await type(r.id, 'student01', 70, v => { r.q.innerHTML = qNormal(v, ''); });
+      await sleep(220);
+      await type(r.pw, '••••••••', 70, v => { r.q.innerHTML = qNormal('student01', v); });
+      await sleep(350);
+      r.anno.innerHTML = ANNO_N;
+    });
+  },
+  sqlAttack(el, instant) {
+    const r = sq(el);
+    r.anno.innerHTML = '';
+    if (instant) {
+      r.id.textContent = ATK; r.pw.textContent = '아무거나';
+      r.q.innerHTML = qAttack;
+      r.anno.innerHTML = ANNO_A; r.anno.classList.add('noanim');
+      return;
+    }
+    r.anno.classList.remove('noanim');
+    run(async () => {
+      r.id.textContent = ''; r.pw.textContent = '';
+      r.q.innerHTML = qRaw('', '');
+      await sleep(300);
+      await type(r.id, ATK, 90, v => { r.q.innerHTML = qRaw(v, ''); });
+      await sleep(250);
+      await type(r.pw, '아무거나', 110, v => { r.q.innerHTML = qRaw(ATK, v); });
+      await sleep(600);
+      r.q.innerHTML = qAttack;
+      r.q.classList.remove('flash'); void r.q.offsetWidth; r.q.classList.add('flash');
+      await sleep(350);
+      r.anno.innerHTML = ANNO_A;
+    });
+  },
+  sqlResult(el, instant) {
+    const r = sq(el);
+    r.res.classList.toggle('noanim', !!instant);
+    r.res.innerHTML = `<div class="stamp">로그인 성공</div><div class="res-sub">비밀번호 없이 <b class="white">첫 번째 계정(admin)</b>으로 접속됨</div>`;
+    r.card.classList.add('pwned');
+  },
+  terminal(el, instant) {
+    const body = $('.term-body', el.closest('.slide'));
+    const full = PS + TERM_CMD + '\n' + TERM_OUT.join('\n') + '\n' + PS + '<span class="cursor"></span>';
+    if (instant) { body.innerHTML = full; return; }
+    run(async () => {
+      body.innerHTML = PS + '<span class="cmd"></span>';
+      await type($('.cmd', body), TERM_CMD, 40);
+      await sleep(450);
+      let html = PS + TERM_CMD;
+      for (let k = 0; k < TERM_OUT.length; k++) {
+        html += '\n' + TERM_OUT[k];
+        body.innerHTML = html + '<span class="cursor"></span>';
+        await sleep(k < 2 ? 380 : (k < 6 ? 260 : 420));
+      }
+      body.innerHTML = full;
+    });
+  },
+  verdict(el) {
+    const s = el.closest('.slide');
+    const ans = s.dataset.answer;
+    $$('.chip', s).forEach(c => {
+      c.classList.toggle('correct', c.dataset.v === ans);
+      c.classList.toggle('faded', c.dataset.v !== ans);
+    });
+  }
+};
+
+const Rain = (() => {
+  let raf = 0, ctx = null, cols = [], last = 0;
+  const CH = '0123456789ABCDEF<>/{}[]#$%;:=*'.split('');
+  const FS = 22, TRAIL = 18, ROWS = Math.ceil(1080 / FS);
+  const rnd = () => CH[(Math.random() * CH.length) | 0];
+  function loop(t) {
+    raf = requestAnimationFrame(loop);
+    if (t - last < 33) return;
+    last = t;
+    ctx.clearRect(0, 0, 1920, 1080);
+    for (let x = 0; x < cols.length; x++) {
+      const c = cols[x];
+      c.y += c.v;
+      const head = Math.floor(c.y);
+      if (head - TRAIL > ROWS) { c.y = -Math.random() * 30; c.v = 0.16 + Math.random() * 0.42; }
+      if (Math.random() < 0.05) c.ch[(Math.random() * c.ch.length) | 0] = rnd();
+      for (let k = 0; k < TRAIL; k++) {
+        const r = head - k;
+        if (r < 0 || r > ROWS) continue;
+        const a = k === 0 ? 0.9 : (1 - k / TRAIL) * 0.42;
+        ctx.fillStyle = k === 0 ? `rgba(220,255,240,${a})` : `rgba(62,230,164,${a})`;
+        ctx.fillText(c.ch[r % c.ch.length], x * FS, r * FS);
+      }
+    }
+  }
+  return {
+    start(cv) {
+      this.stop();
+      if (reduced || !cv) return;
+      ctx = cv.getContext('2d');
+      ctx.font = `${FS - 5}px "JetBrains Mono", Consolas, monospace`;
+      ctx.textBaseline = 'top';
+      cols = Array.from({ length: Math.ceil(1920 / FS) }, () => ({ y: -Math.random() * 60, v: 0.16 + Math.random() * 0.42, ch: Array.from({ length: 64 }, rnd) }));
+      raf = requestAnimationFrame(loop);
+    },
+    stop() { cancelAnimationFrame(raf); raf = 0; }
+  };
+})();
+
+let cur = -1, step = 0;
+const votes = {};
+
+function build(i, st, mode) {
+  gen++;
+  const s = slides[i];
+  s.innerHTML = originals[i];
+  if (votes[i]) { const c = s.querySelector(`.chip[data-v="${votes[i]}"]`); if (c) c.classList.add('picked'); }
+  const gs = groupsOf(s);
+  for (let k = 0; k < st && k < gs.length; k++) {
+    const anim = mode === 'step' && k === st - 1;
+    gs[k].forEach(el => {
+      if (anim) void el.offsetWidth;
+      el.classList.add('on');
+      activate(el, !anim);
+    });
+  }
+  const baseAnim = mode === 'enter';
+  $$('[data-count]', s).forEach(c => { if (!c.closest('.f, .fx')) countUp(c, !baseAnim, 650); });
+  const en = s.dataset.enter;
+  if (en && HOOKS[en]) HOOKS[en](s, !baseAnim);
+}
+function activate(el, instant) {
+  const h = el.dataset.run;
+  if (h && HOOKS[h]) HOOKS[h](el, instant);
+  $$('[data-count]', el).forEach(c => countUp(c, instant, 250));
+}
+
+function go(i, st, back) {
+  i = Math.max(0, Math.min(slides.length - 1, i));
+  st = Math.max(0, Math.min(fragCount[i], st | 0));
+  if (i !== cur) {
+    build(i, st, st === 0 && !back ? 'enter' : 'instant');
+    void slides[i].offsetWidth;
+    slides.forEach((s, k) => {
+      s.classList.toggle('active', k === i);
+      s.classList.toggle('past', k < i);
+      s.classList.toggle('future', k > i);
+      s.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+    });
+    cur = i; step = st;
+    Rain.stop();
+    const cv = slides[i].querySelector('canvas.rain');
+    if (cv) Rain.start(cv);
+  } else if (st !== step) {
+    const s = slides[i];
+    if (!dynamic[i] && Math.abs(st - step) === 1) {
+      const gs = groupsOf(s);
+      if (st > step) gs[st - 1].forEach(el => el.classList.add('on'));
+      else gs[step - 1].forEach(el => el.classList.remove('on'));
+    } else {
+      build(i, st, st > step ? 'step' : 'instant');
+    }
+    step = st;
+  } else return;
+  updateUI();
+}
+function next() {
+  if (blackOn()) return toggleBlack(false);
+  const cs = slides[cur];
+  if (!fragCount[cur] && cs.dataset.enter === 'whoami' && cs.querySelector('.wq:not(.on)')) {
+    gen++; cs.querySelectorAll('.caret').forEach(e => e.classList.remove('caret')); HOOKS.whoami(cs, true); return;
+  }
+  if (step < fragCount[cur]) go(cur, step + 1);
+  else if (cur < slides.length - 1) go(cur + 1, 0);
+}
+function prev() {
+  if (blackOn()) return toggleBlack(false);
+  if (step > 0) go(cur, step - 1);
+  else if (cur > 0) go(cur - 1, fragCount[cur - 1], true);
+}
+
+const hud = $('#hud'), chip = $('#hud-chip'), bar = $('#hud-bar'), pipsEl = $('#hud-pips'), numEl = $('#hud-num');
+const pad2 = n => String(n).padStart(2, '0');
+const pipsHTML = () => fragCount[cur] ? Array.from({ length: fragCount[cur] }, (_, k) => `<i class="${k < step ? 'on' : ''}"></i>`).join('') : '';
+
+function updateUI() {
+  const s = slides[cur], p = +s.dataset.part;
+  document.body.dataset.part = p;
+  hud.classList.toggle('off', s.dataset.hud === 'off');
+  chip.innerHTML = `<span class="dot"></span>${pad2(p)} · ${koWrap(PARTS[p].name)}`;
+  const frac = fragCount[cur] ? step / (fragCount[cur] + 1) : 0;
+  bar.style.width = ((cur + frac) / (slides.length - 1) * 100) + '%';
+  pipsEl.innerHTML = pipsHTML();
+  numEl.textContent = `${cur + 1} / ${slides.length}`;
+  try { history.replaceState(null, '', '#' + (cur + 1) + (step ? '.' + step : '')); } catch (e) {}
+  $$('.m-item').forEach((b, k) => b.classList.toggle('cur', k === cur));
+}
+
+let toastT;
+function toast(html, ms = 4200) {
+  const t = $('#toast');
+  t.innerHTML = html;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), ms);
+}
+
+const black = $('#black');
+const blackOn = () => black.classList.contains('on');
+function toggleBlack(force) { black.classList.toggle('on', force); }
+
+function toggleFS() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(noop);
+  else document.exitFullscreen().catch(noop);
+}
+
+let openOverlay = null;
+function openOv(id) { closeOverlays(); $('#' + id).classList.add('open'); openOverlay = id; }
+function closeOverlays() { $$('.overlay').forEach(o => o.classList.remove('open')); openOverlay = null; }
+$$('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeOverlays(); }));
+
+(function buildMenu() {
+  const list = $('#menu-list');
+  let html = '', lastPart = 0;
+  slides.forEach((s, k) => {
+    const p = +s.dataset.part;
+    if (p !== lastPart) {
+      if (lastPart) html += '</div>';
+      html += `<div class="m-part">${pad2(p)} · ${koWrap(PARTS[p].name)}</div><div class="m-grid">`;
+      lastPart = p;
+    }
+    html += `<button class="m-item" data-go="${k}"><span>${k + 1}</span>${s.dataset.title}</button>`;
+  });
+  list.innerHTML = html + '</div>';
+  list.addEventListener('click', e => {
+    const b = e.target.closest('[data-go]');
+    if (!b) return;
+    closeOverlays();
+    go(+b.dataset.go, 0);
+  });
+})();
+
+function onKey(e) {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key, c = e.code;
+  if (openOverlay) {
+    if (k === 'Escape' || (c === 'KeyG' && openOverlay === 'menu') || ((c === 'Slash' || c === 'KeyH') && openOverlay === 'help')) {
+      closeOverlays(); e.preventDefault();
+    }
+    return;
+  }
+  if (['ArrowRight', 'ArrowDown', 'PageDown', 'Enter'].includes(k) || (k === ' ' && !e.shiftKey)) next();
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(k) || (k === ' ' && e.shiftKey)) prev();
+  else if (k === 'Home') go(0, 0);
+  else if (k === 'End') go(slides.length - 1, 0);
+  else if (c === 'KeyF' || k === 'F5') toggleFS();
+  else if (c === 'KeyB' || c === 'Period') toggleBlack();
+  else if (c === 'KeyG') openOv('menu');
+  else if (c === 'Slash' || c === 'KeyH') openOv('help');
+  else return;
+  e.preventDefault();
+}
+addEventListener('keydown', onKey);
+
+let lastFocus = 0;
+addEventListener('focus', () => { lastFocus = performance.now(); });
+document.addEventListener('click', e => {
+  const chipEl = e.target.closest('.chip[data-v]');
+  if (chipEl) {
+    const s = chipEl.closest('.slide');
+    const i = slides.indexOf(s);
+    const same = votes[i] === chipEl.dataset.v;
+    votes[i] = same ? null : chipEl.dataset.v;
+    $$('.chip', s).forEach(c => c.classList.toggle('picked', !same && c === chipEl));
+    chipEl.blur();
+    return;
+  }
+  if (e.target.closest('.overlay, #hud-nav, a, button')) return;
+  if (blackOn()) { toggleBlack(false); return; }
+  if (e.button !== 0 || performance.now() - lastFocus < 400) return;
+  next();
+});
+$('#nav-prev').addEventListener('click', () => prev());
+$('#nav-next').addEventListener('click', () => next());
+
+let tx = null, ty = null;
+addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+addEventListener('touchend', e => {
+  if (tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) (dx < 0 ? next : prev)();
+  tx = null;
+}, { passive: true });
+
+let idleT;
+addEventListener('mousemove', () => {
+  document.body.classList.add('mouse');
+  document.body.classList.remove('idle');
+  clearTimeout(idleT);
+  idleT = setTimeout(() => { document.body.classList.remove('mouse'); document.body.classList.add('idle'); }, 2200);
+});
+
+function fit() {
+  stage.style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+}
+addEventListener('resize', fit);
+
+addEventListener('beforeprint', () => {
+  Rain.stop();
+  slides.forEach((s, i) => build(i, fragCount[i], 'instant'));
+});
+addEventListener('afterprint', () => {
+  const c = cur, st = step;
+  cur = -1;
+  go(c, st);
+});
+
+function fromHash() {
+  const m = location.hash.match(/^#(\d+)(?:\.(\d+))?$/);
+  return m ? [Math.max(0, +m[1] - 1), +(m[2] || 0)] : [0, 0];
+}
+addEventListener('hashchange', () => {
+  const [i, st] = fromHash();
+  if (i !== cur || st !== step) go(i, st);
+});
+
+fit();
+const [i0, s0] = fromHash();
+go(i0, s0);
+setTimeout(() => toast('<kbd>→</kbd> 다음 · <kbd>F</kbd> 전체화면 · <kbd>?</kbd> 단축키'), 600);
+})();
+</script>
+</body>
+</html>
